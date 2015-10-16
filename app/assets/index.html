@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>totl.io</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <div id="applayout"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+    <script>
+      require.register('fnuc', function(e, r, m) { m.exports = F });
+      require.register('moment', function(e, r, m) { m.exports = moment });
+      require('init');
+    </script>
+  </body>
+</html>

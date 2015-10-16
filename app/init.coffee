@@ -1,0 +1,1 @@
+model = require 'lib/model'

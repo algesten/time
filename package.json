@@ -1,0 +1,40 @@
+{
+  "name": "time",
+  "description": "time keeping",
+  "author": "Martin Algesten",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:algesten/fnuc.git"
+  },
+  "scripts": {
+    "install": "cd lib && npm install",
+    "start": "brunch watch --server",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "auto-reload-brunch": ">= 1.0 < 1.9",
+    "body-parser": "^1.14.1",
+    "clean-css-brunch": ">= 1.0 < 1.9",
+    "coffee-script-brunch": "^1.8.3",
+    "cookie-parser": "^1.4.0",
+    "css-brunch": ">= 1.0 < 1.9",
+    "elasticsearch": "^8.2.0",
+    "express": "^4.13.3",
+    "express-session": "^1.11.3",
+    "fnuc": "^2.0.4",
+    "javascript-brunch": ">= 1.0 < 1.9",
+    "moment": "^2.10.6",
+    "passport": "^0.3.0",
+    "passport-google-oauth": "^0.2.0",
+    "sinon": "^1.17.1",
+    "stylus-brunch": "^1.8.1",
+    "uglify-js-brunch": ">= 1.0 < 1.9"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "coffee-script": "^1.10.0",
+    "mocha": "^2.3.3"
+  }
+}
