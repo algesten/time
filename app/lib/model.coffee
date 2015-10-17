@@ -22,15 +22,10 @@ parse = require './parse'
 spc = split ' '
 hasnullvalue = (o) -> index(values(o), null) >= 0
 
-module.exports = (persist, updated) ->
+module.exports = (persist) ->
 
-    # :: * -> undefined :)
-    trigger = -> updated 'model'
-
-    # :: string -> model -> model + <updated "model">
-    tostate = do ->
-        doset = (state) -> evolve {state:always(state)}
-        (state) -> pipe doset(state), tap(trigger)
+    # :: string -> model -> model
+    tostate = (state) -> evolve {state:always(state)}
 
     # :: model -> <persist> -> (saved) entry
     savenew = pipe get('input'), persist.save

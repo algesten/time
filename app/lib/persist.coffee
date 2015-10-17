@@ -1,18 +1,18 @@
 
-module.export =
+module.exports =
 
     # :: (date, date) -> model (anemic)
     # {userId, entries}
-    load:     (start, stop) ->
+    load:        (start, stop) ->
 
     # :: entry -> entry
-    save:     (entry) ->
+    save:        (entry) ->
 
     # :: (date, date) -> [client]
-    clients:  (start, stop) ->
+    clients:     (start, stop) ->
 
     # :: (date, date) -> [project]
-    projects: (start, stop) ->
+    projects:    (start, stop) ->
 
     # :: (project) -> (project)
     saveproject: (project) ->

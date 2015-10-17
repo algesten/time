@@ -2,7 +2,7 @@
 
 describe 'model', ->
 
-    m = p = u = null
+    m = p = null
 
     start = new Date('2015-10-01Z')
     stop = new Date('2015-10-20Z')
@@ -44,7 +44,7 @@ describe 'model', ->
             projects: spy -> []
             saveproject: spy ->
         u = spy ->
-        m = require('../../../app/lib/model') p, u
+        m = require('../../../app/lib/model') p
 
     describe 'load', ->
 
@@ -59,8 +59,6 @@ describe 'model', ->
                 userId: "ture"
             eql p.load.args.length, 1
             eql p.load.args[0], [start, stop]
-            eql u.args.length, 1
-            eql u.args[0], ['model']
 
     describe 'setnew', ->
 
