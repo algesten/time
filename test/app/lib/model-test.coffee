@@ -72,7 +72,6 @@ describe 'model', ->
                 editId: null
                 entries: []
                 input:
-                    billable: undefined
                     clientId: undefined
                     date: new Date('2015-10-11Z')
                     entryId: null

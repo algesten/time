@@ -12,7 +12,6 @@ omap = curry (o, f) -> r = {}; r[k] = f(k,v) for k, v of o; return r
 #   - time       Number amount of time in seconds
 #   - clientId   String
 #   - projectId  String
-#   - billable   boolean
 #   - orig       String original input
 
 # "(t|y|yy|yyyy|day|<date>) Meeting (<project>) (3h?|3h45|3.45)"
@@ -47,9 +46,9 @@ toentry   = pipe split, parseparts
 extra = (model, orig, entry) ->
     {userId, projects, editId} = model
     project = projects?[entry.projectId]
-    {clientId, billable} = project ? {}
+    {clientId} = project ? {}
     modified = now()
-    mixin entry, {entryId:editId, userId, clientId, billable, orig, modified}
+    mixin entry, {entryId:editId, userId, clientId, orig, modified}
 
 # :: model, str -> entry
 parse = converge nth(0), nth(1), pipe(nth(1), toentry), extra
