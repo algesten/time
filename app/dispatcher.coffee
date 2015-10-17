@@ -1,5 +1,5 @@
 {updated, handle} = require 'trifl'
-{pipe}  = require 'fnuc'
+{pipe, iif, I}  = require 'fnuc'
 moment            = require 'moment'
 doaction          = require 'lib/doaction'
 
@@ -22,17 +22,17 @@ viewstate = require('lib/viewstate') updated
 # singleton with latest version of each model
 store = require 'store'
 
+# viewstate transition
+trans = (state) -> -> store.set('viewstate') viewstate.transition store.viewstate, state
+
 # when page has just loaded
 handle 'init', ->
 
     # initial viewstate set in store
     store.set('viewstate') viewstate.init()
 
-# when server tells us to start
-handle 'startup', pipe store.set('user'), (user) ->
-
-    state = if user then 'entry' else 'need_login'
-    store.set('viewstate') viewstate.transition store.viewstate, state
+# loads one month of data
+loadMonth = ->
 
     # default time period to load into UI
     start = moment().subtract(1, 'month').toDate()
@@ -41,5 +41,13 @@ handle 'startup', pipe store.set('user'), (user) ->
     # load the start model
     model.load(start, stop).then doaction('loaded')
 
+
+# when server tells us to start
+handle 'startup', pipe store.set('user'),
+    iif(I, pipe(trans('loading'), loadMonth), trans('need_login'))
+
 # when we loaded new model data
-handle 'loaded', store.set('model')
+handle 'loaded', pipe store.set('model'), trans('entry')
+
+handle 'newentry', (model, text) ->
+    console.log model, text
