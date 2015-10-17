@@ -2,7 +2,7 @@
   "name": "name",
   "dependencies": {
     "trifl": "~0.0.10",
-    "fnuc": "~2.0.4",
+    "fnuc": "~2.0.5",
     "moment": "~2.10.6"
   },
   "private": true
