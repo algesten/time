@@ -24,7 +24,8 @@ describe 'parse', ->
         [['', mixin base, mixin base]
          ['t', mixin base, date:today()]
          ['t meeting', mixin base, title:'meeting', date:today()]
-         ['t meeting ttn1', mixin base, title:'meeting', projectId:'TTN0001', date:today()]
+         ['t meeting ttn1', mixin base, title:'meeting', clientId:'TTN',
+             projectId:'TTN0001', date:today()]
         ].forEach ([i,cmp]) ->
             cmp = mixin cmp, orig:i
             it "returns partial objects for '#{i}'", ->
@@ -36,7 +37,7 @@ describe 'parse', ->
         p = parse({}, '150601 important meeting ttn1 3h')
         delete p.modified
         eql p, {
-            clientId: undefined
+            clientId: 'TTN'
             date: new Date("2015-06-01Z")
             time: 10800
             entryId: undefined

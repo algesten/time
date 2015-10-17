@@ -72,7 +72,7 @@ describe 'model', ->
                 editId: null
                 entries: []
                 input:
-                    clientId: undefined
+                    clientId: 'TTN'
                     date: new Date('2015-10-11Z')
                     entryId: null
                     orig: '151011 important meeting ttn1 3h'

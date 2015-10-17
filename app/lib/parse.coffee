@@ -1,5 +1,5 @@
 {tap, nth, pipe, converge, split, always, mixin, I,
-iif, evolve, binary, curry} = require 'fnuc'
+iif, evolve, binary, curry, get, slice, maybe} = require 'fnuc'
 
 omap = curry (o, f) -> r = {}; r[k] = f(k,v) for k, v of o; return r
 
@@ -40,16 +40,19 @@ parseparts = evolve
     projectId: require './parseproject'
     time:      require './parsetime'
 
+# :: entry -> entry
+addclient = do ->
+    add = (model, clientId) -> mixin model, {clientId}
+    converge I, pipe(get('projectId'), maybe(slice 0,3)), add
+
 # :: str -> entry (anemic)
-toentry   = pipe split, parseparts
+toentry   = pipe split, parseparts, addclient
 
 # :: entry (anemic) -> entry
 extra = (model, orig, entry) ->
-    {userId, projects, editId} = model
-    project = projects?[entry.projectId]
-    {clientId} = project ? {}
+    {userId, editId} = model
     modified = now()
-    mixin entry, {entryId:editId, userId, clientId, orig, modified}
+    mixin entry, {entryId:editId, userId, orig, modified}
 
 # :: model, str -> entry
 parse = converge nth(0), nth(1), pipe(nth(1), toentry), extra
