@@ -28,6 +28,7 @@ torel = (offsets) -> _torel = (s) ->
 
 
 module.exports = parsedate = (s) ->
+    return null unless s
     l = loc() # TODO: i18n
     [sdate] = match(s, l.dateexp) ? ['']
     [srel]  = match(s[sdate.length..], l.relexp) ? ['']

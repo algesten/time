@@ -1,5 +1,5 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
-mixin, firstfn, eq, indexfn} = require 'fnuc'
+mixin, firstfn, eq, indexfn, index, values, split, pick} = require 'fnuc'
 {append, adjust} = require './immut'
 
 revtime = do ->
@@ -19,6 +19,9 @@ revtime = do ->
 
 parse = require './parse'
 
+spc = split ' '
+hasnullvalue = (o) -> index(values(o), null) >= 0
+
 module.exports = (persist, updated) ->
 
     # :: * -> undefined :)
@@ -33,7 +36,10 @@ module.exports = (persist, updated) ->
     savenew = pipe get('input'), persist.save
 
     # :: model -> boolean
-    isvalid = pipe get('input'), Boolean
+    isvalid = do ->
+        props = spc 'date title projectId time'
+        check = iif pipe(pick(props), hasnullvalue), always(false), always(true)
+        pipe get('input'), check
 
     # :: string -> entry -> boolean
     eqentry = (entryId) -> pipe(get('entryId'), eq(entryId))

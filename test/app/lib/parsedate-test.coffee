@@ -23,10 +23,13 @@ today = do ->
 
 describe 'parsedate', ->
 
+    it "parses '' to null", ->
+        eql parsedate(''), null
+
     locales = [
         n: 'default'
         date: [
-            ['0',  'null', always(null)]
+            ['0',  'null',                            always(null)]
             ['1',  'the first of current month',      forday(1)]
             ['13', 'the thirteenth of current month', forday(13)]
             ['w9', 'week 9 of current year',          forweek(9)]

@@ -1,14 +1,37 @@
+{mixin} = require 'fnuc'
 
 parse = require '../../../app/lib/parse'
 
+today = do ->
+    cur = -> (new Date()).toISOString()[0...10]
+    -> new Date "#{cur()}Z"
+
 describe 'parse', ->
 
-    describe 'returns null until enough input', ->
+    describe 'without enough input', ->
 
-        ['', 't', 't meeting', 't meeting ttmet'].forEach (i) ->
+        base = {
+            billable: undefined
+            clientId: undefined
+            date: null
+            time: null
+            entryId: undefined
+            orig: ''
+            projectId: ''
+            title: ''
+            userId: undefined
+        }
 
-            it "for '#{i}'", ->
-                eql parse({}, i), null
+        [['', mixin base, mixin base]
+         ['t', mixin base, date:today()]
+         ['t meeting', mixin base, title:'meeting', date:today()]
+         ['t meeting ttmet', mixin base, title:'meeting', projectId:'ttmet', date:today()]
+        ].forEach ([i,cmp]) ->
+            cmp = mixin cmp, orig:i
+            it "returns partial objects for '#{i}'", ->
+                p = parse({}, i)
+                delete p.modified
+                eql p, cmp
 
     it 'returns an object with parsed values', ->
         p = parse({}, '150601 important meeting ttmet 3h')

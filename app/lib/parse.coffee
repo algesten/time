@@ -1,5 +1,5 @@
-{tap, nth, pipe, converge, split, index, always, values, mixin, I,
-iif, evolve, binary, curry, pick} = require 'fnuc'
+{tap, nth, pipe, converge, split, always, mixin, I,
+iif, evolve, binary, curry} = require 'fnuc'
 
 omap = curry (o, f) -> r = {}; r[k] = f(k,v) for k, v of o; return r
 
@@ -18,13 +18,20 @@ omap = curry (o, f) -> r = {}; r[k] = f(k,v) for k, v of o; return r
 # "(t|y|yy|yyyy|day|<date>) Meeting (<project>) (3h?|3h45|3.45)"
 
 spc = split ' '
-hasnullvalue = (o) -> index(values(o), null) >= 0
 now = -> new Date()
 onotnull = omap (k, v) -> if v then v else ''
 
 # :: string -> entry (anemic)
 split = (s) ->
     [date, tparts..., projectId, time] = spc s
+    # the above split is greedy for all non-variadic "t meet"
+    # will make projectId="meet", but this is not what we want
+    if projectId and not tparts.length
+        tparts = [projectId]
+        projectId = undefined
+    if time and not projectId
+        projectId = time
+        time = undefined
     title = tparts.join(" ")
     onotnull {date, title, projectId, time}
 
@@ -44,12 +51,7 @@ extra = (model, orig, entry) ->
     modified = now()
     mixin entry, {entryId:editId, userId, clientId, billable, orig, modified}
 
-# :: entry -> entry|null
-guard = do ->
-    props = spc 'date title projectId time'
-    iif pipe(pick(props), hasnullvalue), always(null), I
-
 # :: model, str -> entry
-parse = converge nth(0), nth(1), pipe(nth(1), toentry), pipe(extra, guard)
+parse = converge nth(0), nth(1), pipe(nth(1), toentry), extra
 
 module.exports = parse
