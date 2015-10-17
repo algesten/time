@@ -36,8 +36,9 @@ split = (s) ->
 
 # :: entry (anemic) -> entry (anemic)
 parseparts = evolve
-    date: require './parsedate'
-    time: require './parsetime'
+    date:      require './parsedate'
+    projectId: require './parseproject'
+    time:      require './parsetime'
 
 # :: str -> entry (anemic)
 toentry   = pipe split, parseparts

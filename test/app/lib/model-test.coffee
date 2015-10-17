@@ -65,7 +65,7 @@ describe 'model', ->
     describe 'setnew', ->
 
         it 'parses the string to model.input', ->
-            model2 = m.setnew(model, '151011 important meeting ttmot 3h')
+            model2 = m.setnew(model, '151011 important meeting ttn1 3h')
             delete model2.input.modified
             eql model2,
                 clients: []
@@ -75,8 +75,8 @@ describe 'model', ->
                     clientId: undefined
                     date: new Date('2015-10-11Z')
                     entryId: null
-                    orig: '151011 important meeting ttmot 3h'
-                    projectId: 'ttmot'
+                    orig: '151011 important meeting ttn1 3h'
+                    projectId: 'TTN0001'
                     time: 10800
                     title: 'important meeting'
                     userId: 'ture'
