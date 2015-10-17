@@ -1,5 +1,5 @@
+{pipe, iif, get}  = require 'fnuc'
 {updated, handle} = require 'trifl'
-{pipe, iif, I}  = require 'fnuc'
 moment            = require 'moment'
 doaction          = require 'lib/doaction'
 
@@ -44,10 +44,10 @@ loadMonth = ->
 
 # when server tells us to start
 handle 'startup', pipe store.set('user'),
-    iif(I, pipe(trans('loading'), loadMonth), trans('need_login'))
+    iif get('id'), pipe(trans('loading'), loadMonth), trans('require login')
 
 # when we loaded new model data
-handle 'loaded', pipe store.set('model'), trans('entry')
+handle 'loaded', pipe store.set('model'), trans('ready')
 
 handle 'newentry', (model, text) ->
     console.log model, text

@@ -1,5 +1,7 @@
 {view} = require 'trifl'
-{div} = require('trifl').tagg
+{div, a} = require('trifl').tagg
 
-module.exports = view ->
-    div class:'login', -> 'Need login'
+module.exports = login = view ->
+    div class:'login', a href:"auth/google", "Login with google"
+
+login()

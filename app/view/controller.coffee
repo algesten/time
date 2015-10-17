@@ -11,8 +11,8 @@ handle 'update:viewstate', ->
     applayout.top showstate
 
     applayout.mid switch store.viewstate.state
-        when 'entry'      then sheet
-        when 'need_login' then login
+        when 'entry'         then sheet
+        when 'require login' then login
         else null
 
     update()

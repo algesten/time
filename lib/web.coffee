@@ -1,4 +1,3 @@
-{pick, split} = require 'fnuc'
 session      = require 'express-session'
 cookieParser = require 'cookie-parser'
 bodyParser   = require 'body-parser'
@@ -28,10 +27,7 @@ module.exports = (port, path, cb) ->
 
     # hook up session reading to socket.io
     io.use (socket, next) -> sessionmw socket.request, {}, next
-    io.on 'connection', (socket) ->
-        rawUser = socket.request.session?.passport?.user ? {}
-        user = pick rawUser, split(' ') 'id displayName name emails photos'
-        socket.emit 'startup', user
+    io.on 'connection', require('./connect')
 
     # root of static files
     root = normalize __dirname + '/../' + path
