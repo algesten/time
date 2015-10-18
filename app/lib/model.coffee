@@ -1,6 +1,11 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
 mixin, firstfn, eq, indexfn, index, values, split, pick} = require 'fnuc'
 {append, adjust} = require './immut'
+moment = require 'moment'
+
+asUTC = (date) ->
+    d = date.toISOString()[0...10]
+    new Date "#{d}Z"
 
 revtime = do ->
     gettimeprop = (p) -> (o) -> o[p]?.getTime?()
@@ -71,4 +76,14 @@ module.exports = (persist) ->
             editId:   null
         pipe persist.load, init, tostate('')
 
-    {save, setnew, edit, load}
+    # :: -> model
+    month = ->
+
+        # default time period to load into UI
+        start = asUTC moment().subtract(1, 'month').toDate()
+        stop  = null
+
+        # load the start model
+        load(start, stop)
+
+    {save, setnew, edit, load, month}

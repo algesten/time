@@ -1,11 +1,14 @@
 {pick, each, keys, pfail, pipe, apply} = require 'fnuc'
 
-shim    = require '../app/lib/persist'
-persist = require './persist'
+# the original persistence definition
+shim = require '../app/lib/persist'
+
+# persistence per user
+persistfor = require('./persist')
 
 # sanity check
 each keys(shim), (name) ->
-    throw new Error("Missing persist function: #{name}") unless persist[name]
+    throw new Error("Missing persist function: #{name}") unless persistfor(null)[name]
 
 userOf    = (socket) -> socket.request.session?.passport?.user ? {}
 userProps = pick 'id displayName name emails photos'.split(' ')
@@ -21,10 +24,14 @@ module.exports = (socket) ->
     # emit the user to the client
     socket.emit 'startup', user
 
-    # create args array with prepended contextual user
-    args = (as) -> [user, as...]
+    # we don't wire up the persistence unless there is a logged in
+    # user.
+    if user.id
 
-    # provide user to every persistence method
-    each keys(shim), (name) -> socket.on name, (as, cb) ->
-        fn = pipe apply(persist[name]), ok(cb), pfail(fail cb)
-        fn args(as)
+        # user wrapped persistence
+        persist = persistfor user
+
+        # provide user to every persistence method
+        each keys(shim), (name) -> socket.on name, (as, cb) ->
+            fn = pipe persist[name], ok(cb), pfail(fail cb)
+            fn as...

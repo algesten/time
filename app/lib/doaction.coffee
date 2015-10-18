@@ -1,2 +1,2 @@
 {action} = require 'trifl'
-module.exports = (name) -> (arg) -> action name, arg
+module.exports = (name) -> (arg) -> action(name, arg); arg
