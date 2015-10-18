@@ -12,8 +12,6 @@ revtime = do ->
 #   - userId       String user id
 #   - entries      Array of entry
 #   - state        model state "saving", "saved"
-#   - clients      {clientId: client}
-#   - projects     {projectId: project}
 #   - input        entry of current input
 #   - editId       String id of entry being edited
 
@@ -67,12 +65,10 @@ module.exports = (persist) ->
 
     # :: (date, date) -> model
     load = do ->
-        init = (model, clients, projects) -> mixin model,
-            state:    'loaded'
-            clients:  clients
-            projects: projects
+        init = (model) -> mixin model,
+            state:    null
             input:    null
             editId:   null
-        converge persist.load, persist.clients, persist.projects, pipe(init, tostate '')
+        pipe persist.load, init, tostate('')
 
     {save, setnew, edit, load}

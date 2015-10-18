@@ -19,20 +19,16 @@ describe 'model', ->
         userId: 'ture'
 
     model =
-        clients: []
         editId: null
         entries: []
         input: null
-        projects: []
         state: ""
         userId: "ture"
 
     withentry =
-        clients: []
         editId: null
         entries: [entry]
         input: null
-        projects: []
         state: ""
         userId: "ture"
 
@@ -40,8 +36,6 @@ describe 'model', ->
         p =
             load: spy -> {userId:'ture', entries:[]}
             save: spy (e) -> set shallow(e), 'entryId', 'saved'
-            clients:  spy -> []
-            projects: spy -> []
             saveproject: spy ->
         u = spy ->
         m = require('../../../app/lib/model') p
@@ -50,11 +44,9 @@ describe 'model', ->
 
         it 'initialises from persistence', ->
             eql m.load(start, stop),
-                clients: []
                 editId: null
                 entries: []
                 input: null
-                projects: []
                 state: ""
                 userId: "ture"
             eql p.load.args.length, 1
@@ -66,7 +58,6 @@ describe 'model', ->
             model2 = m.setnew(model, '151011 important meeting ttn1 3h')
             delete model2.input.modified
             eql model2,
-                clients: []
                 editId: null
                 entries: []
                 input:
@@ -78,7 +69,6 @@ describe 'model', ->
                     time: 10800
                     title: 'important meeting'
                     userId: 'ture'
-                projects: []
                 state: "valid"
                 userId: "ture"
 
