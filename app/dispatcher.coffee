@@ -44,7 +44,7 @@ handle 'startup', pipe store.set('user'),
 # when we loaded new model/client data
 handle 'loaded model',   store.set('model')
 handle 'loaded clients', store.set('clients')
-handle 'loaded', trans('loaded')
+handle 'loaded', trans('ready')
 
 handle 'newentry', (model, text) ->
     console.log model, text
