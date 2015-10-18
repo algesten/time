@@ -13,7 +13,7 @@ revtime = do ->
     modof   = gettimeprop 'modified'
     sort (o1, o2) -> if (r = timof(o1) - timof(o2)) then r else modof(o1) - modof(o2)
 
-# model:
+# entries:
 #   - userId       String user id
 #   - entries      Array of entry
 #   - state        model state "saving", "saved"
@@ -27,13 +27,13 @@ hasnullvalue = (o) -> index(values(o), null) >= 0
 
 module.exports = (persist) ->
 
-    # :: string -> model -> model
+    # :: string -> entries -> entries
     tostate = (state) -> evolve {state:always(state)}
 
-    # :: model -> <persist> -> (saved) entry
+    # :: entries -> <persist> -> (saved) entry
     savenew = pipe get('input'), persist.save
 
-    # :: model -> boolean
+    # :: entries -> boolean
     isvalid = do ->
         props = spc 'date title projectId time'
         check = iif pipe(pick(props), hasnullvalue), always(false), always(true)
@@ -42,15 +42,15 @@ module.exports = (persist) ->
     # :: string -> entry -> boolean
     eqentry = (entryId) -> pipe(get('entryId'), eq(entryId))
 
-    # :: model -> model with update state
+    # :: entries -> entries with update state
     validate  = iif isvalid, tostate('valid'), tostate('invalid')
 
-    # :: (model, string) -> model
+    # :: (entries, string) -> entries
     setnew = do ->
         doset = (model, entry) -> mixin model, {input:entry}
         converge nth(0), parse, pipe(doset, validate)
 
-    # :: model -> model
+    # :: entries -> entries
     dosave = converge I, savenew, (model, entry) ->
         idx = indexfn model.entries, eqentry(entry.entryId)
         evolve model,
@@ -58,17 +58,17 @@ module.exports = (persist) ->
             editId:   always(null)
             input:    always(null)
 
-    # :: model -> model
+    # :: entries -> entries
     save = pipe tostate('saving'), dosave, tostate('saved')
 
-    # :: (model, string) -> model
+    # :: (entries, string) -> entries
     edit = do ->
         doedit = (model, editId) ->
           input = firstfn model.entries, eqentry(editId)
           mixin model, if input then {editId, input} else {editId:null, input:null}
         pipe doedit, iif get('input'), tostate('valid'), tostate('')
 
-    # :: (date, date) -> model
+    # :: (date, date) -> entries
     load = do ->
         init = (model) -> mixin model,
             state:    null
@@ -76,7 +76,7 @@ module.exports = (persist) ->
             editId:   null
         pipe persist.load, init, tostate('')
 
-    # :: -> model
+    # :: -> entries
     month = ->
 
         # default time period to load into UI

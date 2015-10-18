@@ -19,5 +19,5 @@ handle 'update:viewstate', ->
 
 update = ->
     showstate store.viewstate
-    if store.model
-        input store.model
+    if store.entries
+        input store.entries

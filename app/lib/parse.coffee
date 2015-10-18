@@ -49,12 +49,12 @@ addclient = do ->
 toentry   = pipe split, parseparts, addclient
 
 # :: entry (anemic) -> entry
-extra = (model, orig, entry) ->
-    {userId, editId} = model
+extra = (entries, orig, entry) ->
+    {userId, editId} = entries
     modified = now()
     mixin entry, {entryId:editId, userId, orig, modified}
 
-# :: model, str -> entry
+# :: entries, str -> entry
 parse = converge nth(0), nth(1), pipe(nth(1), toentry), extra
 
 module.exports = parse

@@ -1,6 +1,6 @@
 {shallow, set} = require 'fnuc'
 
-describe 'model', ->
+describe 'entries', ->
 
     m = p = null
 
@@ -38,7 +38,7 @@ describe 'model', ->
             save: spy (e) -> set shallow(e), 'entryId', 'saved'
             saveproject: spy ->
         u = spy ->
-        m = require('../../../app/lib/model') p
+        m = require('../../../app/lib/entries') p
 
     describe 'load', ->
 

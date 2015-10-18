@@ -1,7 +1,7 @@
 
 module.exports =
 
-    # :: (date, date) -> model (anemic)
+    # :: (date, date) -> entries (anemic)
     # {userId, entries}
     load: (start, stop) ->
 

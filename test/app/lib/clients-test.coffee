@@ -1,3 +1,4 @@
+{shallow, set} = require 'fnuc'
 
 describe 'clients', ->
 
@@ -5,8 +6,9 @@ describe 'clients', ->
 
     beforeEach ->
         p =
-            clients:  spy -> [{clientId:'TTN', title:'TT Nyhetsbyrån'}]
-            projects: spy -> [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
+            clients:    spy -> [{clientId:'TTN', title:'TT Nyhetsbyrån'}]
+            saveclient: spy (c) -> set shallow(c), 'clientId', 'saved'
+            projects:   spy -> [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
         c = require('../../../app/lib/clients') p
 
     describe 'init', ->

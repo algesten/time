@@ -16,7 +16,7 @@ emit = socket.emit.bind(socket)
 persist = require('lib/persist-proxy')(emit)
 
 # the model handling functions
-model     = require('lib/model') persist
+entries   = require('lib/entries') persist
 clients   = require('lib/clients') persist
 viewstate = require('lib/viewstate')
 
@@ -28,9 +28,9 @@ trans = (state) -> -> store.set('viewstate') viewstate.transition store.viewstat
 
 # do load month and then dispatch action
 loadstuff = do ->
-    loadmodel   = pipe model.month,  doaction('loaded model')
-    loadclients = pipe clients.init, doaction('loaded clients')
-    pipe trans('loading'), converge loadmodel, loadclients, doaction('loaded')
+    loadentries = pipe entries.month, doaction('loaded entries')
+    loadclients = pipe clients.init,  doaction('loaded clients')
+    pipe trans('loading'), converge loadentries, loadclients, doaction('loaded')
 
 # when page has just loaded
 handle 'init', ->
@@ -41,10 +41,10 @@ handle 'init', ->
 handle 'startup', pipe store.set('user'),
     iif get('id'), loadstuff, trans('require login')
 
-# when we loaded new model/client data
-handle 'loaded model',   store.set('model')
+# when we loaded new entries/client data
+handle 'loaded entries', store.set('entries')
 handle 'loaded clients', store.set('clients')
 handle 'loaded', trans('ready')
 
-handle 'newentry', (model, text) ->
-    console.log model, text
+handle 'newentry', (entries, text) ->
+    console.log entries, text

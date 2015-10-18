@@ -11,7 +11,7 @@ module.exports = (persist) ->
     # :: string -> client -> boolean
     eqclient = (clientId) -> pipe(get('clientId'), eq(clientId))
 
-    # :: (model, client) -> model
+    # :: (clients, client) -> clients
     addclient = converge nth(0), pipe(nth(1), persist.saveclient), (model, client) ->
         idx = indexfn model.clients, eqclient(client.clientId)
         evolve model,
