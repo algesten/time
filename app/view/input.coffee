@@ -2,10 +2,15 @@
 {input, div} = require('trifl').tagg
 later = require 'lib/later'
 
+ismod = (ev) -> ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey
+
 module.exports = view (entries) -> div class:'input', ->
-    val = entries?.input?.orig ? ''
-    input type:'text', value:val, onkeydown: (ev) ->
+    input type:'text', onkeydown: (ev) ->
         el = ev.target
-        # later because we need the innerText to contain the last
-        # pressed character
-        later -> action 'newinput', entries, el.value
+        if ev.keyCode is 13
+            if not ismod(ev)
+                action 'save input', entries
+        else
+            # later because we need the innerText to contain the last
+            # pressed character
+            later -> action 'new input', entries, el.value

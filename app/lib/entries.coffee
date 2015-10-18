@@ -58,8 +58,11 @@ module.exports = (persist, decorate) ->
             editId:   always(null)
             input:    always(null)
 
+    # :: string -> entries -> entries|null
+    stateis = (state) -> (fn) -> iif pipe(get('state'), eq(state)), fn, always(null)
+
     # :: entries -> entries
-    save = pipe tostate('saving'), dosave, tostate('saved')
+    save = stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
     # :: (entries, string) -> entries
     edit = do ->

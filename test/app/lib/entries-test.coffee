@@ -93,3 +93,9 @@ describe 'entries', ->
             model3 = m.save model2
             eql model3.entries.length, 1
             eql model3.entries[0].entryId, 'saved'
+            eql model3.input, null
+
+        it 'does not save an invalid entry', ->
+            model2 = m.setnew model, '-'
+            model3 = m.save model2
+            eql model3, null

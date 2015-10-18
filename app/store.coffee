@@ -12,6 +12,6 @@ module.exports = store = {set}
 define = (prop) -> Object.defineProperty store, prop,
     enumerable: true
     get: -> _store[prop]
-    set: (v) -> _store[prop] = v; updated prop
+    set: (v) -> _store[prop] = v; updated(prop); v
 
 'user viewstate entries clients'.split(' ').forEach define

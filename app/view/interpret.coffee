@@ -17,8 +17,9 @@ module.exports = interpret = view (entries) -> div class:'interpret', ->
     div class:'title', ifstr input?.title
     div class:'project', ->
         div class:'project-id',    ifstr input?.projectId
-        div class:'project-title'
-        div class:'client-title'
-    div class:'time', iftime input?.time
+        div class:'project-title', ifstr input?._project?.title
+        div class:'client-title',  ifstr input?._client?.title
+    div class:'time',  iftime input?.time
+    div class:'state', ifstr entries?.state
 
 interpret()

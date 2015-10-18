@@ -1,4 +1,4 @@
-{pipe, iif, get, converge}  = require 'fnuc'
+{pipe, iif, get, converge, maybe}  = require 'fnuc'
 {updated, handle} = require 'trifl'
 moment            = require 'moment'
 doaction          = require 'lib/doaction'
@@ -50,4 +50,9 @@ handle 'loaded clients', store.set('clients')
 handle 'loaded', trans('ready')
 
 # parse new input and update the store
-handle 'newinput', pipe entries.setnew, store.set('entries')
+handle 'new input', pipe entries.setnew, store.set('entries')
+
+# (attempt to) save the current input to a new entry, and then update
+# the store.
+handle 'save input',  pipe entries.save, maybe doaction('saved input')
+handle 'saved input', store.set('entries')
