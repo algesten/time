@@ -1,4 +1,5 @@
-{converge, indexfn, eq, get, nth, pipe} = require 'fnuc'
+{converge, indexfn, eq, get, nth, pipe, evolve, firstfn, mixin} = require 'fnuc'
+{append, adjust} = require './immut'
 
 module.exports = (persist) ->
 
@@ -9,7 +10,9 @@ module.exports = (persist) ->
         -> fn() # no arguments
 
     # :: string -> client -> boolean
-    eqclient = (clientId) -> pipe(get('clientId'), eq(clientId))
+    _eq = (prop) -> (id) -> pipe(get(prop), eq(id))
+    eqclient  = _eq 'clientId'
+    eqproject = _eq 'projectId'
 
     # :: (clients, client) -> clients
     addclient = converge nth(0), pipe(nth(1), persist.saveclient), (model, client) ->
@@ -17,4 +20,10 @@ module.exports = (persist) ->
         evolve model,
             clients: (if idx < 0 then append else adjust(idx)) client
 
-    {init}
+    # :: (clients, entry) -> entry
+    decorate = (model, entry) ->
+        client  = firstfn model.clients, eqclient(entry.clientId)
+        project = firstfn model.projects, eqproject(entry.projectId)
+        mixin entry, {_client:client, _project:project}
+
+    {init, addclient, decorate}

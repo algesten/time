@@ -1,8 +1,11 @@
 {view, action} = require 'trifl'
-{div} = require('trifl').tagg
+{input, div} = require('trifl').tagg
 later = require 'lib/later'
 
-module.exports = view (entries) ->
-    div contenteditable:true, onkeydown: (ev) ->
+module.exports = view (entries) -> div class:'input', ->
+    val = entries?.input?.orig ? ''
+    input type:'text', value:val, onkeydown: (ev) ->
         el = ev.target
-        later -> action 'newentry', entries, el.innerText
+        # later because we need the innerText to contain the last
+        # pressed character
+        later -> action 'newinput', entries, el.value

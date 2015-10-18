@@ -1,5 +1,5 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
-mixin, firstfn, eq, indexfn, index, values, split, pick} = require 'fnuc'
+mixin, firstfn, eq, indexfn, index, values, split, pick, map} = require 'fnuc'
 {append, adjust} = require './immut'
 moment = require 'moment'
 
@@ -25,13 +25,13 @@ parse = require './parse'
 spc = split ' '
 hasnullvalue = (o) -> index(values(o), null) >= 0
 
-module.exports = (persist) ->
+module.exports = (persist, decorate) ->
 
     # :: string -> entries -> entries
     tostate = (state) -> evolve {state:always(state)}
 
     # :: entries -> <persist> -> (saved) entry
-    savenew = pipe get('input'), persist.save
+    saveinput = pipe get('input'), persist.save
 
     # :: entries -> boolean
     isvalid = do ->
@@ -47,11 +47,11 @@ module.exports = (persist) ->
 
     # :: (entries, string) -> entries
     setnew = do ->
-        doset = (model, entry) -> mixin model, {input:entry}
+        doset = (model, entry) -> mixin model, {input:decorate entry}
         converge nth(0), parse, pipe(doset, validate)
 
     # :: entries -> entries
-    dosave = converge I, savenew, (model, entry) ->
+    dosave = converge I, saveinput, (model, entry) ->
         idx = indexfn model.entries, eqentry(entry.entryId)
         evolve model,
             entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime

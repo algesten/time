@@ -1,3 +1,5 @@
+@import './defs'
+
 // minimal reset
 *
   padding: 0
@@ -5,13 +7,11 @@
   border: 0
 html
   box-sizing: border-box
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   font-smoothing: antialiased
   text-rendering: optimizeLegibility
   -webkit-font-smoothing: subpixel-antialiased
-  font-weight: 300
+  font()
   font-size: 18px
-  letter-spacing: 0.025em
   line-height: 20px
   background: #efefef
   color: #444444
@@ -26,3 +26,10 @@ html, body, #applayout
   height: 100%
   margin: 0 auto
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2)
+
+*:focus
+  outline: none
+
+input[type=text]
+  font()
+  font-size: 32px

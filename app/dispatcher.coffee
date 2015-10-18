@@ -15,13 +15,16 @@ emit = socket.emit.bind(socket)
 # persistence proxy to client
 persist = require('lib/persist-proxy')(emit)
 
-# the model handling functions
-entries   = require('lib/entries') persist
-clients   = require('lib/clients') persist
-viewstate = require('lib/viewstate')
-
 # singleton with latest version of each model
 store = require 'store'
+
+# tie entry decoration to current clients
+decorate = (entry) -> clients.decorate store.clients, entry
+
+# the model handling functions
+clients   = require('lib/clients') persist
+entries   = require('lib/entries') persist, decorate
+viewstate = require('lib/viewstate')
 
 # viewstate transition
 trans = (state) -> -> store.set('viewstate') viewstate.transition store.viewstate, state
@@ -46,5 +49,5 @@ handle 'loaded entries', store.set('entries')
 handle 'loaded clients', store.set('clients')
 handle 'loaded', trans('ready')
 
-handle 'newentry', (entries, text) ->
-    console.log entries, text
+# parse new input and update the store
+handle 'newinput', pipe entries.setnew, store.set('entries')

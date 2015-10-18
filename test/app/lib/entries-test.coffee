@@ -1,4 +1,4 @@
-{shallow, set} = require 'fnuc'
+{shallow, set, I} = require 'fnuc'
 
 describe 'entries', ->
 
@@ -32,13 +32,15 @@ describe 'entries', ->
         state: ""
         userId: "ture"
 
+    decorate = I
+
     beforeEach ->
         p =
             load: spy -> {userId:'ture', entries:[]}
             save: spy (e) -> set shallow(e), 'entryId', 'saved'
             saveproject: spy ->
         u = spy ->
-        m = require('../../../app/lib/entries') p
+        m = require('../../../app/lib/entries') p, decorate
 
     describe 'load', ->
 

@@ -22,9 +22,9 @@ putmap = (type) -> ->
 do pipe (iif exists, I, create), putmap('entry'), putmap('client'), putmap('project')
 
 # turn a es hit into an entry/client/project
-toentry   = (hit) -> mixin hit._source, {entryId:  hit._id}
-toclient  = (hit) -> mixin hit._source, {clientId: hit._id}
-toproject = (hit) -> mixin hit._source, {projectId:hit._id}
+toentry   = (hit) -> mixin hit._source, {entryId: hit._id}
+toclient  = (hit) -> mixin hit._source, {_id: hit._id}
+toproject = (hit) -> mixin hit._source, {_id: hit._id}
 
 spc = split ' '
 
@@ -60,7 +60,7 @@ module.exports = (user) ->
         pipe mkquery, search('client', [clientId:'asc']), toresp
 
     saveclient: (client) ->
-        id   = client.clientId
+        id   = client._id
         body = mixin clientprops(client), userId:user.id
         client.index {index, type:'client', id, body}
 
@@ -70,6 +70,6 @@ module.exports = (user) ->
         pipe mkquery, search('project', [projectId:'asc']), toresp
 
     saveproject: (project) ->
-        id   = project.projectId
+        id   = project._id
         body = mixin projectprops(project), userId:user.id
         client.index {index, type:'project', id, body}

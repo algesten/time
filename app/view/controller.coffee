@@ -3,7 +3,6 @@ store    = require 'store'
 
 applayout = require './applayout'
 showstate = require './showstate'
-input     = require './input'
 sheet     = require './sheet'
 login     = require './login'
 
@@ -17,7 +16,10 @@ handle 'update:viewstate', ->
 
     update()
 
+
+handle 'update:entries', ->
+    update()
+
 update = ->
     showstate store.viewstate
-    if store.entries
-        input store.entries
+    sheet.update()

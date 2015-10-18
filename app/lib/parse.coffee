@@ -46,7 +46,7 @@ addclient = do ->
     converge I, pipe(get('projectId'), maybe(slice 0,3)), add
 
 # :: str -> entry (anemic)
-toentry   = pipe split, parseparts, addclient
+toentry = pipe split, parseparts, addclient
 
 # :: entry (anemic) -> entry
 extra = (entries, orig, entry) ->
