@@ -8,10 +8,10 @@ asUTC = (date) ->
     new Date "#{d}Z"
 
 revtime = do ->
-    gettimeprop = (p) -> (o) -> o[p]?.getTime?()
-    timof   = gettimeprop 'time'
-    modof   = gettimeprop 'modified'
-    sort (o1, o2) -> if (r = timof(o1) - timof(o2)) then r else modof(o1) - modof(o2)
+    gettimeprop = (p) -> (o) -> if o[p] then moment(o[p]).unix() else 0
+    dateof   = gettimeprop 'date'
+    modof    = gettimeprop 'modified'
+    sort (o2, o1) -> if (r = dateof(o1) - dateof(o2)) then r else modof(o1) - modof(o2)
 
 # entries:
 #   - userId       String user id

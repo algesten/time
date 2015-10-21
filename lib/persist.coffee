@@ -30,8 +30,8 @@ spc = split ' '
 
 # the props we use from the client
 entryprops   = pick spc 'date modified title time clientId projectId orig'
-projectprops = pick spc 'projectId clientId title'
 clientprops  = pick spc 'clientId title'
+projectprops = pick spc 'projectId clientId title'
 
 # persistence to database
 module.exports = (user) ->
@@ -44,12 +44,12 @@ module.exports = (user) ->
         size: 10000
         sort:sort}
 
-    doindex = (type) -> (id, body) -> {index, type, id, body}
+    doindex = (type) -> (id, body) -> client.index {index, type, id, body}
 
     load: do ->
         mkquery = (start, stop) -> {range:date:{gte:start,lt:stop}}
         toresp  = (res) -> {userId:user.id, entries:map(toentry) res.hits.hits}
-        pipe mkquery, search('entry', [date:'desc']), toresp
+        pipe mkquery, search('entry', [date:'desc', modified:'desc']), toresp
 
     save: do ->
         bodyof = (entry) -> mixin entryprops(entry), userId:user.id
@@ -61,17 +61,17 @@ module.exports = (user) ->
         toresp  = (res) -> map(toclient) res.hits.hits
         pipe mkquery, search('client', [clientId:'asc']), toresp
 
-    saveclient: (client) ->
-        id   = client._id
-        body = mixin clientprops(client), userId:user.id
-        client.index {index, type:'client', id, body}
+    saveclient: do ->
+        bodyof = (client) -> mixin clientprops(client), userId:user.id
+        toresp = (client, res) -> mixin client, {_id:res._id}
+        converge I, converge(get('_id'), bodyof, doindex('client')), toresp
 
     projects: do ->
         mkquery = -> match_all:{}
         toresp  = (res) -> map(toproject) res.hits.hits
         pipe mkquery, search('project', [projectId:'asc']), toresp
 
-    saveproject: (project) ->
-        id   = project._id
-        body = mixin projectprops(project), userId:user.id
-        client.index {index, type:'project', id, body}
+    saveproject: do ->
+        bodyof = (project) -> mixin projectprops(project), userId:user.id
+        toresp = (project, res) -> mixin project, {_id:res._id}
+        converge I, converge(get('_id'), bodyof, doindex('project')), toresp
