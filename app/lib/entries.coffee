@@ -1,6 +1,6 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
 unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
-pick, map, at, tail, concat, join} = require 'fnuc'
+pick, map, at, tail, concat, join, fold1, nnot, maybe} = require 'fnuc'
 {append, adjust} = require './immut'
 minimaldate      = require './minimaldate'
 moment = require 'moment'
@@ -25,7 +25,7 @@ revtime = do ->
 parse = require './parse'
 
 spc = split ' '
-hasnullvalue = (o) -> index(values(o), null) >= 0
+hasnullvalue = pipe values, fold1((a,b) -> !!a and !!b), nnot(I)
 
 module.exports = (persist, decorate) ->
 
@@ -68,19 +68,19 @@ module.exports = (persist, decorate) ->
 
     # :: entry -> entry
     fixorig = do ->
-        parseorig = (entry) -> parse {}, entry.orig
+        parseorig = (entry) -> parse {}, entry?.orig
         gettime   = (d) -> d.getTime()
         samedate  = pipe unapply(I), map(pipe get('date'), gettime), apply(eq)
-        adjust    = (entry) ->
+        dofix    = (entry) ->
             fixed = minimaldate(moment()) moment(entry.date)
             evolve entry,
                 orig:pipe spc, converge always(fixed), tail, pipe(concat, join ' ')
-        pipe converge I, parseorig, iif samedate, I, adjust
+        pipe converge I, parseorig, iif samedate, I, dofix
 
     # :: (entries, string) -> entries
     edit = do ->
         doedit = (model, editId) ->
-            input = fixorig firstfn model.entries, eqentry(editId)
+            input = maybe(fixorig) firstfn model.entries, eqentry(editId)
             mixin model, if input then {editId, input} else {editId:null, input:null}
         pipe doedit, iif get('input'), tostate('valid'), tostate('')
 

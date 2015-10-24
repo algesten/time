@@ -1,7 +1,9 @@
 {tap, nth, pipe, converge, split, always, mixin, I,
-iif, evolve, binary, curry, get, slice, maybe} = require 'fnuc'
+iif, evolve, binary, curry, get, slice, maybe, omap} = require 'fnuc'
 
-omap = curry (o, f) -> r = {}; r[k] = f(k,v) for k, v of o; return r
+parsedate    = require './parsedate'
+parseproject = require './parseproject'
+parsetime    = require './parsetime'
 
 # entry:
 #   - entryId    String from persistence
@@ -22,7 +24,11 @@ onotnull = omap (k, v) -> if v then v else ''
 
 # :: string -> entry (anemic)
 split = (s) ->
-    [date, tparts..., projectId, time] = spc s
+    parts = spc s
+    [date, tparts..., projectId, time] = parts
+    if parseproject(time)
+        # no time (yet)
+        time = null; [date, tparts..., projectId] = parts
     # the above split is greedy for all non-variadic "t meet"
     # will make projectId="meet", but this is not what we want
     if projectId and not tparts.length
@@ -36,9 +42,9 @@ split = (s) ->
 
 # :: entry (anemic) -> entry (anemic)
 parseparts = evolve
-    date:      require './parsedate'
-    projectId: require './parseproject'
-    time:      require './parsetime'
+    date:      parsedate
+    projectId: parseproject
+    time:      parsetime
 
 # :: entry -> entry
 addclient = do ->

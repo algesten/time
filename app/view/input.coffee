@@ -6,7 +6,7 @@ ismod = (ev) -> ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey
 
 inputview = view fn = (entries) -> div ->
     val = entries.input
-    input value:val?.orig, type:'text', onkeydown: (ev) ->
+    input placeholder:'t meeting tst1 2', value:val?.orig, type:'text', onkeydown: (ev) ->
         el = ev.target
         if ev.keyCode is 13
             if not ismod(ev)
@@ -17,6 +17,8 @@ inputview = view fn = (entries) -> div ->
             later -> action 'new input', entries, el.value
     , onfocus: (ev) ->
         ev.target.select()
+    , onblur:  (ev) ->
+        action 'edit entry', entries, '' # unselect
 , observe: ([mut]) ->
     if mut.type == 'childList'
         [el] = mut.addedNodes
