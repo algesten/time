@@ -1,26 +1,32 @@
 
-.interpret
-  position: relative
+height = 2.8rem
+
+.interpret > div
   display: flex
-  border: solid 1px #bcbcbc
-  align-items: center
-  height: 4em;
-  line-height: 1.2em
-  .date
-    width: 21%
-    padding-left: 8px
-  .title
-    flex-grow: 1
-  .project
+  flex-flow column
+  > * > *
+    padding 0 9px
+  .main
+    line-height: height
+    font-size: 14px
+    height height
     display: flex
-    flex-direction: column
-    width: 30%
-  .time
-    width: 9%
-    text-align right
-    padding-right: 8px
-  .state
-    position absolute
-    line-height: 34px
-    top -34px
-    right: 8px
+    .input-holder
+      flex 1
+    .project-id
+      width: 5rem
+    .time
+      width: 5rem
+  .sub
+    border-top: solid 1px #e0e0e0
+    height (height / 3)
+    line-height: (height / 3)
+    font-size: 0.6em
+    display: flex
+    .date
+      width: 6rem
+    .project-title
+      flex 1
+      text-align right
+    .client-title
+      min-width 10rem

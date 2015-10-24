@@ -1,11 +1,18 @@
 
+height = 2.8rem
+
 .input
+  position absolute // relative to .controls
+  top 0
+  left 0
+  height: height
+  width: calc(100% - 11rem)
   input
-    padding: 0.3rem 0.5rem
-    border: solid 1px #bcbcbc
-    width: 100%
+    padding: 0 9px
+    height height
     font-family: monospace
     color: #444
-    font-size: 18px
+    font-size: 16px
     font-weight 100
     background: #fafafa
+    width: 100%

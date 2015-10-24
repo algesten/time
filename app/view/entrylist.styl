@@ -1,6 +1,4 @@
 .entrylist
-  margin-right: 9px;
-  margin-left: 9px;
   list-style none
   .totaltime
     display inline-block
@@ -12,17 +10,22 @@
     font-size: 18px
     line-height: 1.6em
     > ol
-      li.entry
-        font-size: 14px
-        line-height: 2.8rem
+      list-style none
+      li
         border-bottom: 1px solid #e0e0e0
-        margin 0 -9px
-        padding 0 9px
+      li.entry
+        > *
+          padding 0 9px
+          line-height: 2.8rem
+          height: 2.8rem
+        margin 0
+        font-size: 14px
         display: flex
         .title
           flex-grow: 1
+        .project-id
+          width: 5rem
         .time
-          padding-left: 20px
-          margin-right 40px
+          width: 5rem
         &:hover
           background: #fafafa

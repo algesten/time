@@ -11,15 +11,21 @@ ifdate = ifdef datediff
 ifstr  = ifdef I
 iftime = ifdef timeamount
 
-module.exports = interpret = view (entries) -> div class:'interpret', ->
+interpret = view fn = (entries) -> div ->
     input = entries?.input
-    div class:'date', ifdate input?.date
-    div class:'title', ifstr input?.title
-    div class:'project', ->
-        div class:'project-id',    ifstr input?.projectId
+    div class:'main', ->
+        div class:'input-holder', ->
+        div class:'project-id', ifstr input?.projectId
+        div class:'time',  iftime input?.time
+    div class:'sub', ->
+        div class:'date', ifdate input?.date
         div class:'project-title', ifstr input?._project?.title
         div class:'client-title',  ifstr input?._client?.title
-    div class:'time',  iftime input?.time
-    div class:'state', ifstr entries?.state
+    #div class:'state', ifstr entries?.state
 
 interpret()
+
+# expose inner tagg function
+interpret.fn = fn
+
+module.exports = interpret

@@ -7,7 +7,7 @@ moment = require 'moment'
 
 asUTC = (date) ->
     d = date.toISOString()[0...10]
-    new Date "#{d}Z"
+    new Date "#{d}T00:00:00Z"
 
 revtime = do ->
     gettimeprop = (p) -> (o) -> if o[p] then moment(o[p]).unix() else 0
