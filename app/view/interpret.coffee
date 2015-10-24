@@ -5,7 +5,7 @@ datediff   = require 'lib/datediff'
 timeamount = require 'lib/timeamount'
 
 # we want iif(I, _, always('-'))
-ifdef = partial iif(always('-')), I
+ifdef = partial iif(always('')), I
 
 ifdate = ifdef datediff
 ifstr  = ifdef I
@@ -17,11 +17,12 @@ interpret = view fn = (entries) -> div ->
         div class:'input-holder', ->
         div class:'project-id', ifstr input?.projectId
         div class:'time',  iftime input?.time
+        if entries?.state == 'valid'
+            div class:'state icon-check'
     div class:'sub', ->
         div class:'date', ifdate input?.date
         div class:'project-title', ifstr input?._project?.title
         div class:'client-title',  ifstr input?._client?.title
-    #div class:'state', ifstr entries?.state
 
 interpret()
 
