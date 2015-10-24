@@ -17,3 +17,7 @@ module.exports = view (entries) -> ol class:'entrylist', ->
                 div class:'title',      e.title
                 div class:'project-id', e.projectId
                 div class:'time',       timeamount e.time
+            , onclick: (ev) ->
+                ev.stopPropagation()
+                ev.preventDefault()
+                action 'edit entry', entries, e.entryId

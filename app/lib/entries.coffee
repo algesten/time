@@ -1,6 +1,8 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
-mixin, firstfn, eq, indexfn, index, values, split, pick, map} = require 'fnuc'
+unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
+pick, map, at, tail, concat, join} = require 'fnuc'
 {append, adjust} = require './immut'
+minimaldate      = require './minimaldate'
 moment = require 'moment'
 
 asUTC = (date) ->
@@ -64,11 +66,22 @@ module.exports = (persist, decorate) ->
     # :: entries -> entries
     save = stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
+    # :: entry -> entry
+    fixorig = do ->
+        parseorig = (entry) -> parse {}, entry.orig
+        gettime   = (d) -> d.getTime()
+        samedate  = pipe unapply(I), map(pipe get('date'), gettime), apply(eq)
+        adjust    = (entry) ->
+            fixed = minimaldate(moment()) moment(entry.date)
+            evolve entry,
+                orig:pipe spc, converge always(fixed), tail, pipe(concat, join ' ')
+        pipe converge I, parseorig, iif samedate, I, adjust
+
     # :: (entries, string) -> entries
     edit = do ->
         doedit = (model, editId) ->
-          input = firstfn model.entries, eqentry(editId)
-          mixin model, if input then {editId, input} else {editId:null, input:null}
+            input = fixorig firstfn model.entries, eqentry(editId)
+            mixin model, if input then {editId, input} else {editId:null, input:null}
         pipe doedit, iif get('input'), tostate('valid'), tostate('')
 
     # :: (date, date) -> entries
@@ -77,7 +90,10 @@ module.exports = (persist, decorate) ->
             state:    null
             input:    null
             editId:   null
-        pipe persist.load, init, tostate('')
+        asdate = (s) -> new Date(s)
+        todate = evolve
+            entries: map evolve {date:asdate, modified:asdate}
+        pipe persist.load, init, todate, tostate('')
 
     # :: -> entries
     month = ->

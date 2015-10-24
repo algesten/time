@@ -56,3 +56,6 @@ handle 'new input', pipe entries.setnew, store.set('entries')
 # the store.
 handle 'save input',  pipe entries.save, maybe doaction('saved input')
 handle 'saved input', store.set('entries')
+
+# start editing an existing entry
+handle 'edit entry', pipe entries.edit, store.set('entries')

@@ -5,7 +5,8 @@ later = require 'lib/later'
 ismod = (ev) -> ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey
 
 module.exports = view (entries) -> div class:'input', ->
-    input type:'text', onkeydown: (ev) ->
+    val = entries.input
+    input class:'input', value:val?.orig, type:'text', onkeydown: (ev) ->
         el = ev.target
         if ev.keyCode is 13
             if not ismod(ev)
