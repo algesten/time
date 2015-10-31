@@ -23,7 +23,7 @@
     "elasticsearch": "^8.2.0",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
-    "fnuc": "^2.0.5",
+    "fnuc": "^3.0.4",
     "javascript-brunch": ">= 1.0 < 1.9",
     "moment": "^2.10.6",
     "passport": "^0.3.0",

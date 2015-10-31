@@ -25,7 +25,7 @@ revtime = do ->
 parse = require './parse'
 
 spc = split ' '
-hasnullvalue = pipe values, fold1((a,b) -> !!a and !!b), nnot(I)
+hasnullvalue = pipe values, fold1((a,b) -> !!a and !!b), nnot
 
 module.exports = (persist, decorate) ->
 
