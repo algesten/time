@@ -1,6 +1,6 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
 unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
-pick, map, at, tail, concat, join, fold1, nnot, maybe} = require 'fnuc'
+pick, map, at, tail, concat, join, fold1, nnot, maybe, call} = require 'fnuc'
 {append, adjust} = require './immut'
 minimaldate      = require './minimaldate'
 moment = require 'moment'
@@ -81,10 +81,17 @@ module.exports = (persist, decorate) ->
 
     # :: (entries, string) -> entries
     edit = do ->
-        doedit = (model, editId) ->
-            input = maybe(fixorig) firstfn model.entries, eqentry(editId)
-            mixin model, if input then {editId, input} else {editId:null, input:null}
-        pipe doedit, iif get('input'), tostate('valid'), tostate('')
+        finder = pipe nth(1), eqentry, firstfn
+        entriesof = pipe nth(0), get('entries')
+        toinput  = (entry) -> {editId:entry?.entryId, input:entry}
+        getinput = converge finder, entriesof, pipe call, toinput
+        converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
+
+    # :: (entries, string) -> entries
+    delet = do ->
+        finder = pipe nth(1), eqentry, firstfn
+        entriesof   = pipe nth(0), get('entries')
+        converge finder, entriesof, pipe call, maybe(persist.delete)
 
     # :: (date, date) -> entries
     load = do ->
@@ -104,4 +111,4 @@ module.exports = (persist, decorate) ->
         # load the start model
         load(start, stop)
 
-    {save, setnew, edit, load, month}
+    {save, setnew, edit, load, month, delet}

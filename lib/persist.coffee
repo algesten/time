@@ -44,7 +44,8 @@ module.exports = (user) ->
         size: 10000
         sort:sort}
 
-    doindex = (type) -> (id, body) -> client.index {index, type, id, body}
+    doindex  = (type) -> (id, body) -> client.index {index, type, id, body}
+    dodelete = (type) -> (id) -> client.delete {index, type, id}
 
     load: do ->
         mkquery = (start, stop) -> {range:date:{gte:start,lt:stop}}
@@ -56,6 +57,12 @@ module.exports = (user) ->
         toresp = (entry, res) -> mixin entry, {entryId:res._id}
         converge I, converge(get('entryId'), bodyof, doindex('entry')), toresp
 
+    delete: do ->
+        toresp = (res) ->
+            console.log res
+            true
+        pipe get('entryId'), dodelete('entry'), toresp
+
     clients: do ->
         mkquery = -> match_all:{}
         toresp  = (res) -> map(toclient) res.hits.hits
@@ -66,6 +73,10 @@ module.exports = (user) ->
         toresp = (client, res) -> mixin client, {_id:res._id}
         converge I, converge(get('_id'), bodyof, doindex('client')), toresp
 
+    deleteclient: do ->
+
+        pipe get('_id'), dodelete('client'), -> true
+
     projects: do ->
         mkquery = -> match_all:{}
         toresp  = (res) -> map(toproject) res.hits.hits
@@ -75,3 +86,7 @@ module.exports = (user) ->
         bodyof = (project) -> mixin projectprops(project), userId:user.id
         toresp = (project, res) -> mixin project, {_id:res._id}
         converge I, converge(get('_id'), bodyof, doindex('project')), toresp
+
+    deleteproject: do ->
+
+        pipe get('_id'), dodelete('project'), -> true

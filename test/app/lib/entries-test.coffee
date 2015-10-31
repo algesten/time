@@ -83,7 +83,7 @@ describe 'entries', ->
 
         it 'doesnt set an invalid input/editId', ->
             model2 = m.edit withentry, 'entx'
-            eql model2.editId, null
+            eql model2.editId, undefined
             eql model2.input, null
 
     describe 'save', ->

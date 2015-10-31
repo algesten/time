@@ -8,14 +8,23 @@ module.exports =
     # :: entry -> entry
     save: (entry) ->
 
+    # :: entry -> bool
+    delete: (entry) ->
+
     # :: (date, date) -> [client]
     clients: ->
+
+    # :: client -> client
+    saveclient:  (client) ->
+
+    # :: client -> bool
+    deleteclient: (client) ->
 
     # :: (date, date) -> [project]
     projects: ->
 
-    # :: (project) -> (project)
+    # :: project -> project
     saveproject: (project) ->
 
-    # :: (client) -> (client)
-    saveclient:  (client) ->
+    # :: project -> bool
+    deleteproject: (project) ->
