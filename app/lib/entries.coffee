@@ -66,10 +66,12 @@ module.exports = (persist, decorate) ->
     # :: entries -> entries
     save = stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
+    # the date may have been entered in a relative way 'yy' which must
+    # be adjusted to a fixed date in case it's not the same day anymore.
     # :: entry -> entry
     fixorig = do ->
         parseorig = (entry) -> parse {}, entry?.orig
-        gettime   = (d) -> d.getTime()
+        gettime   = (d) -> moment(d).valueOf()
         samedate  = pipe unapply(I), map(pipe get('date'), gettime), apply(eq)
         dofix    = (entry) ->
             fixed = minimaldate(moment()) moment(entry.date)
@@ -90,10 +92,7 @@ module.exports = (persist, decorate) ->
             state:    null
             input:    null
             editId:   null
-        asdate = (s) -> new Date(s)
-        todate = evolve
-            entries: map evolve {date:asdate, modified:asdate}
-        pipe persist.load, init, todate, tostate('')
+        pipe persist.load, init, tostate('')
 
     # :: -> entries
     month = ->

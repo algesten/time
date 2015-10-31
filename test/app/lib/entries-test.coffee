@@ -10,7 +10,7 @@ describe 'entries', ->
     entry =
         billable: undefined
         clientId: undefined
-        date: new Date('2015-10-11Z')
+        date: new Date('2015-10-11Z').toISOString()
         entryId: 'ent1'
         orig: '151011 important meeting 3h ttmot'
         projectId: 'ttmot'
@@ -64,7 +64,7 @@ describe 'entries', ->
                 entries: []
                 input:
                     clientId: 'TTN'
-                    date: new Date('2015-10-11Z')
+                    date: new Date('2015-10-11Z').toISOString()
                     entryId: null
                     orig: '151011 important meeting ttn1 3h'
                     projectId: 'TTN0001'
@@ -89,7 +89,7 @@ describe 'entries', ->
     describe 'save', ->
 
         it 'saves the currently edited entry', ->
-            model2 = m.setnew model, '151011 important meeting ttmot 3h'
+            model2 = m.setnew model, '151011 important meeting ttmot1 3h'
             model3 = m.save model2
             eql model3.entries.length, 1
             eql model3.entries[0].entryId, 'saved'

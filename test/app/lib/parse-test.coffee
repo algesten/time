@@ -4,7 +4,7 @@ parse = require '../../../app/lib/parse'
 
 today = do ->
     cur = -> (new Date()).toISOString()[0...10]
-    -> new Date "#{cur()}Z"
+    -> (new Date "#{cur()}Z").toISOString()
 
 describe 'parse', ->
 
@@ -12,7 +12,7 @@ describe 'parse', ->
 
         base = {
             clientId: undefined
-            date: null
+            date: undefined
             time: null
             entryId: undefined
             orig: ''
@@ -38,7 +38,7 @@ describe 'parse', ->
         delete p.modified
         eql p, {
             clientId: 'TTN'
-            date: new Date("2015-06-01Z")
+            date: new Date("2015-06-01Z").toISOString()
             time: 10800
             entryId: undefined
             orig: '150601 important meeting ttn1 3h'
@@ -53,7 +53,7 @@ describe 'parse', ->
         delete p.modified
         eql p, {
             clientId: 'TTN'
-            date: new Date("2015-06-01Z")
+            date: new Date("2015-06-01Z").toISOString()
             time: 10800
             entryId: '123'
             orig: '150601 meeting ttn1 3h'

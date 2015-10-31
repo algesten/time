@@ -8,8 +8,8 @@ parsetime    = require './parsetime'
 # entry:
 #   - entryId    String from persistence
 #   - userId     String mandatory
-#   - date       Date in UTC mandatory. Rounded to nearest day.
-#   - modified   Date. Last time entry was modified.
+#   - date       Date string. in UTC mandatory. Rounded to nearest day.
+#   - modified   Date string. Last time entry was modified.
 #   - title      String
 #   - time       Number amount of time in seconds
 #   - clientId   String
@@ -19,7 +19,8 @@ parsetime    = require './parsetime'
 # "(t|y|yy|yyyy|day|<date>) Meeting (<project>) (3h?|3h45|3.45)"
 
 spc = split ' '
-now = -> new Date()
+toiso = (d) -> d?.toISOString()
+now = -> toiso new Date()
 onotnull = omap (k, v) -> if v then v else ''
 
 # :: string -> entry (anemic)
@@ -42,7 +43,7 @@ split = (s) ->
 
 # :: entry (anemic) -> entry (anemic)
 parseparts = evolve
-    date:      parsedate
+    date:      pipe parsedate, toiso
     projectId: parseproject
     time:      parsetime
 
