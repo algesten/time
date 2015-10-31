@@ -16,7 +16,6 @@ handle 'update:viewstate', ->
 
     update()
 
-
 handle 'update:entries', ->
     update()
 

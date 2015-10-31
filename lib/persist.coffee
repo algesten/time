@@ -58,9 +58,7 @@ module.exports = (user) ->
         converge I, converge(get('entryId'), bodyof, doindex('entry')), toresp
 
     delete: do ->
-        toresp = (res) ->
-            console.log res
-            true
+        toresp = get('found')
         pipe get('entryId'), dodelete('entry'), toresp
 
     clients: do ->
@@ -74,8 +72,8 @@ module.exports = (user) ->
         converge I, converge(get('_id'), bodyof, doindex('client')), toresp
 
     deleteclient: do ->
-
-        pipe get('_id'), dodelete('client'), -> true
+        toresp = get('found')
+        pipe get('_id'), dodelete('client'), toresp
 
     projects: do ->
         mkquery = -> match_all:{}
@@ -88,5 +86,5 @@ module.exports = (user) ->
         converge I, converge(get('_id'), bodyof, doindex('project')), toresp
 
     deleteproject: do ->
-
-        pipe get('_id'), dodelete('project'), -> true
+        toresp = get('found')
+        pipe get('_id'), dodelete('project'), toresp

@@ -16,6 +16,5 @@ sheet.entrylist entrylist
 sheet.update = ->
     {entries} = store
     if entries
-        unless entries.editId
-            controls.update entries
+        controls.update entries
         entrylist entries

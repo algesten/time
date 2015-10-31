@@ -1,7 +1,7 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
 unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
 pick, map, at, tail, concat, join, fold1, nnot, maybe, call} = require 'fnuc'
-{append, adjust} = require './immut'
+{append, adjust, remove} = require './immut'
 minimaldate      = require './minimaldate'
 moment = require 'moment'
 
@@ -77,9 +77,6 @@ module.exports = (persist, decorate) ->
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
 
     # :: entries -> entries
-    unedit = (model) -> edit model, ''
-
-    # :: entries -> entries
     dosave = converge I, saveinput, (model, entry) ->
         idx = indexfn model.entries, eqentry(entry.entryId)
         evolve model,
@@ -88,13 +85,15 @@ module.exports = (persist, decorate) ->
             input:    always(null)
 
     # :: entries -> entries
-    save = stateis('valid') pipe tostate('saving'), dosave, unedit
+    save = stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
-    # :: (entries, string) -> entries
+    # :: (entries, entry) -> entries
     delet = do ->
-        finder = pipe nth(1), eqentry, firstfn
-        entriesof   = pipe nth(0), get('entries')
-        converge finder, entriesof, pipe call, maybe(persist.delete)
+        doremove = (model, entry) ->
+            idx = indexfn model.entries, eqentry(entry.entryId)
+            evolve model,
+                entries: remove(idx)
+        converge nth(0), nth(1), pipe(nth(1), persist.delete), iif nth(2), doremove, nth(0)
 
     # :: (date, date) -> entries
     load = do ->

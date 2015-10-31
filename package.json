@@ -16,6 +16,7 @@
   "dependencies": {
     "auto-reload-brunch": ">= 1.0 < 1.9",
     "body-parser": "^1.14.1",
+    "bog": "^1.0.0",
     "clean-css-brunch": ">= 1.0 < 1.9",
     "coffee-script-brunch": "^1.8.3",
     "cookie-parser": "^1.4.0",

@@ -11,13 +11,14 @@ ifdate = ifdef datediff
 ifstr  = ifdef I
 iftime = ifdef timeamount
 
-interpret = view fn = (entries) -> div ->
-    input = entries?.input
+interpret = view fn = (isedit, entries) -> div ->
+    doedit = !isedit == !entries?.editId
+    input = if doedit then entries?.input else null
     div class:'main', ->
         div class:'input-holder', ->
         div class:'project-id', ifstr input?.projectId
         div class:'time',  iftime input?.time
-        if entries?.state == 'valid'
+        if doedit and entries?.state == 'valid'
             div class:'state icon-check'
     div class:'sub', ->
         div class:'date', ifdate input?.date

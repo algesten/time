@@ -38,6 +38,7 @@ describe 'entries', ->
         p =
             load: spy -> {userId:'ture', entries:[]}
             save: spy (e) -> set shallow(e), 'entryId', 'saved'
+            delete: spy (e) -> true
             saveproject: spy ->
         u = spy ->
         m = require('../../../app/lib/entries') p, decorate
@@ -99,3 +100,18 @@ describe 'entries', ->
             model2 = m.setnew model, '-'
             model3 = m.save model2
             eql model3, null
+
+    describe 'delete', ->
+
+        it 'calls persistence and removes entry if true', ->
+            model2 = m.delet withentry, withentry.entries[0]
+            eql model2.entries, []
+            eql p.delete.args.length, 1
+            eql p.delete.args[0][0].entryId, 'ent1'
+
+        it 'calls persistence and doesnt remove entry if false', ->
+            p.delete = -> false
+            m = require('../../../app/lib/entries') p, decorate
+            model2 = m.delet withentry, withentry.entries[0]
+            eql model2.entries.length, 1
+            eql model2.entries[0].entryId, 'ent1'

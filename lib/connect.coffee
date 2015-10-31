@@ -1,4 +1,5 @@
 {pick, each, keys, pfail, pipe, apply} = require 'fnuc'
+log = require 'bog'
 
 # the original persistence definition
 shim = require '../app/lib/persist'
@@ -14,7 +15,9 @@ userOf    = (socket) -> socket.request.session?.passport?.user ? {}
 userProps = pick 'id displayName name emails photos'.split(' ')
 
 ok   = (cb) -> (v) -> cb null, v
-fail = (cb) -> (e) -> cb e
+fail = (cb) -> (e) ->
+    log.warn e.stack
+    cb e.message
 
 module.exports = (socket) ->
 

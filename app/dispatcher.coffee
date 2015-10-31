@@ -59,3 +59,7 @@ handle 'saved input', store.set('entries')
 
 # start editing an existing entry
 handle 'edit entry', pipe entries.edit, store.set('entries')
+
+# delete existing entry
+handle 'delete entry', pipe entries.delet, doaction('deleted entry')
+handle 'deleted entry', store.set('entries')

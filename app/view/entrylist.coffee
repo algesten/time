@@ -20,8 +20,13 @@ module.exports = view (entries) -> ol class:'entrylist', ->
                 li ->
                     div class:'controls-inline', ->
                         # editing entry
-                        div class:'interpret', -> interpret.fn(entries)
-                        div class:'input', -> input.fn(entries)
+                        div class:'delete icon-cancel', onclick: (ev) ->
+                            if confirm "Really delete entry?"
+                                action 'delete entry', entries, e
+                        div class:'interpret', -> interpret.fn(true, entries)
+                        div class:'input', -> input.fn(true, entries)
+                    , onclick: (ev) ->
+                        ev.stopPropagation()
             else
                 li class:'entry', ->
                     div class:'title',      e.title

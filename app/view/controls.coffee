@@ -12,5 +12,5 @@ controls.interpret interpret
 controls.input     input
 
 controls.update = (entries) ->
-    interpret entries
-    input     entries
+    interpret false, entries
+    input     false, entries
