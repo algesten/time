@@ -13,7 +13,6 @@ inputview = view fn = (entries) -> div ->
         if ev.keyCode is 13
             if not ismod(ev)
                 action 'save input', entries
-                unselectonce()
         else
             # later because we need the innerText to contain the last
             # pressed character

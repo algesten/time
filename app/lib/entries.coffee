@@ -52,19 +52,8 @@ module.exports = (persist, decorate) ->
         doset = (model, entry) -> mixin model, {input:decorate entry}
         converge nth(0), parse, pipe(doset, validate)
 
-    # :: entries -> entries
-    dosave = converge I, saveinput, (model, entry) ->
-        idx = indexfn model.entries, eqentry(entry.entryId)
-        evolve model,
-            entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime
-            editId:   always(null)
-            input:    always(null)
-
     # :: string -> entries -> entries|null
     stateis = (state) -> (fn) -> iif pipe(get('state'), eq(state)), fn, always(null)
-
-    # :: entries -> entries
-    save = stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
     # the date may have been entered in a relative way 'yy' which must
     # be adjusted to a fixed date in case it's not the same day anymore.
@@ -86,6 +75,20 @@ module.exports = (persist, decorate) ->
         toinput  = (entry) -> {editId:entry?.entryId, input:entry}
         getinput = converge finder, entriesof, pipe call, toinput
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
+
+    # :: entries -> entries
+    unedit = (model) -> edit model, ''
+
+    # :: entries -> entries
+    dosave = converge I, saveinput, (model, entry) ->
+        idx = indexfn model.entries, eqentry(entry.entryId)
+        evolve model,
+            entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime
+            editId:   always(null)
+            input:    always(null)
+
+    # :: entries -> entries
+    save = stateis('valid') pipe tostate('saving'), dosave, unedit
 
     # :: (entries, string) -> entries
     delet = do ->
