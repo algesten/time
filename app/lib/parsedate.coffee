@@ -22,7 +22,7 @@ loc = ->
     formats: ['DD', '[w]WW', 'MMDD', 'DD/MM', 'YYMMDD', 'YYYYMMDD']
     offsets: {t:0, y:-1, d:1, w:-7}
 
-asUTC = (s) -> new Date "#{s}T00:00:00Z"
+{asutc} = require './datefun'
 torel = (offsets) -> _torel = (s) ->
     if s.length then offsets[head(s)] + _torel(tail(s)) else 0
 
@@ -34,6 +34,6 @@ module.exports = parsedate = (s) ->
     [srel]  = match(s[sdate.length..], l.relexp) ? ['']
     return null if sdate == '0' # edge case that moment treats badly
     m       = if sdate then moment(sdate, l.formats) else moment()
-    date    = asUTC m.format 'YYYY-MM-DD'
+    date    = asutc new Date m.format 'YYYY-MM-DD'
     rel     = torel(l.offsets) srel
     moment(date).add(rel, 'days').toDate()

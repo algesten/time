@@ -1,15 +1,13 @@
-{nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
+{nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get, flip,
 unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
 pick, map, at, tail, concat, join, fold1, nnot, maybe, call, sub, fold} = require 'fnuc'
 {append, adjust, remove} = require './immut'
 minimaldate      = require './minimaldate'
 moment = require 'moment'
 
-ifdef = (fn) -> iif I, fn, I
+{asutc} = require './datefun'
 
-asUTC = (date) ->
-    d = date.toISOString()[0...10]
-    new Date "#{d}T00:00:00Z"
+ifdef = (fn) -> iif I, fn, I
 
 lcomp = (asc) -> (s1, s2) -> s1?.localeCompare(s2)
 
@@ -17,7 +15,7 @@ revtime = do ->
     gettimeprop = (p) -> (o) -> if o[p] then moment(o[p]).unix() else 0
     cexec = (ext, comp) -> (o1, o2) -> comp ext(o1), ext(o2)
     order = [
-        cexec gettimeprop('date'), sub
+        cexec gettimeprop('date'), flip(sub)
         cexec get('projectId'), lcomp(true)
         cexec get('title'), lcomp(true)
     ]
@@ -69,7 +67,7 @@ module.exports = (persist, decorate) ->
         gettime   = (d) -> moment(d).valueOf()
         samedate  = pipe unapply(I), map(pipe get('date'), gettime), apply(eq)
         dofix    = (entry) ->
-            fixed = minimaldate(moment()) moment(entry.date)
+            fixed = minimaldate moment(asutc new Date entry.date)
             evolve entry,
                 orig:pipe spc, converge always(fixed), tail, pipe(concat, join ' ')
         pipe converge I, parseorig, iif samedate, I, dofix
@@ -113,7 +111,7 @@ module.exports = (persist, decorate) ->
     month = ->
 
         # default time period to load into UI
-        start = asUTC moment().subtract(1, 'month').toDate()
+        start = asutc moment().subtract(1, 'month').toDate()
         stop  = null
 
         # load the start model

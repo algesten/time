@@ -1,9 +1,20 @@
-{iif, always} = require 'fnuc'
+{iif, always, pipe, eq} = require 'fnuc'
+moment = require 'moment'
 
-diff   = (t1, t) -> (t2) -> t1.diff(t2, t)
-format = (f) -> (t) -> t.format f
+{today} = require './datefun'
 
-module.exports = (t1) ->
-    iif diff(t1, 'year'),  format('YYMMDD'),
-    iif diff(t1, 'month'), format('MMDD'),
-    iif diff(t1, 'day'),   format('DD'), always('t')
+mtoday = -> moment(today())
+
+notsame = (f) -> (tim) -> mtoday().format(f) != tim.format(f)
+diff    = (t) -> (tim) -> mtoday().diff(tim, t)
+format  = (f) -> (t) -> t.format f
+
+daydiff = (n) -> pipe diff('day'), eq(n)
+
+module.exports =
+    iif notsame('YYYY'),   format('YYMMDD'),
+    iif notsame('YYYYMM'), format('MMDD'),
+    iif daydiff(3), always('yyy'),
+    iif daydiff(2), always('yy'),
+    iif daydiff(1), always('y'),
+    iif daydiff(0), always('t'), format('DD')

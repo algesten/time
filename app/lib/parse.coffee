@@ -1,6 +1,8 @@
 {tap, nth, pipe, converge, split, always, mixin, I,
 iif, evolve, binary, curry, get, slice, maybe, omap} = require 'fnuc'
 
+{toiso, now} = require './datefun'
+
 parsedate    = require './parsedate'
 parseproject = require './parseproject'
 parsetime    = require './parsetime'
@@ -19,8 +21,6 @@ parsetime    = require './parsetime'
 # "(t|y|yy|yyyy|day|<date>) Meeting (<project>) (3h?|3h45|3.45)"
 
 spc = split ' '
-toiso = (d) -> d?.toISOString()
-now = -> toiso new Date()
 onotnull = omap (k, v) -> if v then v else ''
 
 # :: string -> entry (anemic)
