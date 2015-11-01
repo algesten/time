@@ -1,4 +1,4 @@
-{pipe, iif, I, map, split, pick, mixin, converge, get} = require 'fnuc'
+{pipe, iif, I, map, split, pick, mixin, converge, get, nth, always} = require 'fnuc'
 elasticsearch = require 'elasticsearch'
 shortid       = require 'shortid'
 
@@ -50,7 +50,7 @@ module.exports = (user) ->
     load: do ->
         mkquery = (start, stop) -> {range:date:{gte:start,lt:stop}}
         toresp  = (res) -> {userId:user.id, entries:map(toentry) res.hits.hits}
-        pipe mkquery, search('entry', [date:'desc', modified:'desc']), toresp
+        pipe mkquery, search('entry', [date:'desc', projectId:'asc', title:'asc']), toresp
 
     save: do ->
         bodyof = (entry) -> mixin entryprops(entry), userId:user.id

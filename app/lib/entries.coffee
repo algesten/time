@@ -1,6 +1,6 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get,
 unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
-pick, map, at, tail, concat, join, fold1, nnot, maybe, call} = require 'fnuc'
+pick, map, at, tail, concat, join, fold1, nnot, maybe, call, sub, fold} = require 'fnuc'
 {append, adjust, remove} = require './immut'
 minimaldate      = require './minimaldate'
 moment = require 'moment'
@@ -11,11 +11,18 @@ asUTC = (date) ->
     d = date.toISOString()[0...10]
     new Date "#{d}T00:00:00Z"
 
+lcomp = (asc) -> (s1, s2) -> s1?.localeCompare(s2)
+
 revtime = do ->
     gettimeprop = (p) -> (o) -> if o[p] then moment(o[p]).unix() else 0
-    dateof   = gettimeprop 'date'
-    modof    = gettimeprop 'modified'
-    sort (o2, o1) -> if (r = dateof(o1) - dateof(o2)) then r else modof(o1) - modof(o2)
+    cexec = (ext, comp) -> (o1, o2) -> comp ext(o1), ext(o2)
+    order = [
+        cexec gettimeprop('date'), sub
+        cexec get('projectId'), lcomp(true)
+        cexec get('title'), lcomp(true)
+    ]
+    comp = converge order..., unapply(firstfn I)
+    sort comp
 
 # entries:
 #   - userId       String user id
