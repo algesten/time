@@ -34,9 +34,6 @@ module.exports = (persist, decorate) ->
     # :: string -> entries -> entries
     tostate = (state) -> evolve {state:always(state)}
 
-    # :: entries -> <persist> -> (saved) entry
-    saveinput = pipe get('input'), persist.save
-
     # :: entries -> boolean
     isvalid = do ->
         props = spc 'date title projectId time'
@@ -79,15 +76,15 @@ module.exports = (persist, decorate) ->
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
 
     # :: entries -> entries
-    dosave = converge I, saveinput, (model, entry) ->
-        idx = indexfn model.entries, eqentry(entry.entryId)
-        evolve model,
-            entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime
-            editId:   always(null)
-            input:    always(null)
-
-    # :: entries -> entries
-    save = stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
+    save = do ->
+        saveinput = pipe get('input'), persist.save
+        dosave = converge I, saveinput, (model, entry) ->
+            idx = indexfn model.entries, eqentry(entry.entryId)
+            evolve model,
+                entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime
+                editId:   always(null)
+                input:    always(null)
+        stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
     # :: (entries, entry) -> entries
     delet = do ->
