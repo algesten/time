@@ -91,16 +91,19 @@ module.exports = (persist, decorate) ->
         idx = indexfn model.entries, eqentry(entry.entryId)
         evolve model, {entries:remove(idx)}
 
+    # entries -> entries
+    unedit = evolve {editId:always(null), input:always(null)}
+
     # :: entries -> entries
     save = do ->
         saveinput = pipe get('input'), persist.save
-        unedit = evolve {editId:always(null), input:always(null)}
         dosave = converge I, saveinput, pipe update, unedit
         stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
     # :: (entries, entry) -> entries
     delet = do ->
-        converge nth(0), nth(1), pipe(nth(1), persist.delete), iif nth(2), erase, nth(0)
+        eraseif = iif nth(2), erase, nth(0)
+        converge nth(0), nth(1), pipe(nth(1), persist.delete), pipe eraseif, unedit
 
     # :: (date, date) -> entries
     load = do ->

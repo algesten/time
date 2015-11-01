@@ -52,9 +52,11 @@ handle 'loaded', trans('ready')
 # parse new input and update the store
 handle 'new input', pipe entries.setnew, store.set('entries')
 
+# put the given entries to the store
+handle 'store entries', store.set('entries')
+
 # save the current input to a new entry, and then update the store.
-handle 'save input',  pipe entries.save, maybe doaction('saved input')
-handle 'saved input', store.set('entries')
+handle 'save input',  pipe entries.save, maybe doaction('store entries')
 
 # updates from the server
 handle 'updated entry',
@@ -64,7 +66,7 @@ handle 'updated entry',
 handle 'edit entry', pipe entries.edit, store.set('entries')
 
 # delete existing entry
-handle 'delete entry', pipe entries.delet
+handle 'delete entry', pipe entries.delet, doaction('store entries')
 
 # delete from server
 handle 'deleted entry',
