@@ -80,24 +80,27 @@ module.exports = (persist, decorate) ->
         getinput = converge finder, entriesof, pipe call, ifdef(fixorig), toinput
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
 
+    # :: entries, entry -> entries
+    update = (model, entry) ->
+        idx = indexfn model.entries, eqentry(entry.entryId)
+        evolve model,
+            entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime
+
+    # :: entries, entry -> entries
+    erase = (model, entry) ->
+        idx = indexfn model.entries, eqentry(entry.entryId)
+        evolve model, {entries:remove(idx)}
+
     # :: entries -> entries
     save = do ->
         saveinput = pipe get('input'), persist.save
-        dosave = converge I, saveinput, (model, entry) ->
-            idx = indexfn model.entries, eqentry(entry.entryId)
-            evolve model,
-                entries:  pipe (if idx < 0 then append else adjust(idx))(entry), revtime
-                editId:   always(null)
-                input:    always(null)
+        unedit = evolve {editId:always(null), input:always(null)}
+        dosave = converge I, saveinput, pipe update, unedit
         stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
     # :: (entries, entry) -> entries
     delet = do ->
-        doremove = (model, entry) ->
-            idx = indexfn model.entries, eqentry(entry.entryId)
-            evolve model,
-                entries: remove(idx)
-        converge nth(0), nth(1), pipe(nth(1), persist.delete), iif nth(2), doremove, nth(0)
+        converge nth(0), nth(1), pipe(nth(1), persist.delete), iif nth(2), erase, nth(0)
 
     # :: (date, date) -> entries
     load = do ->
@@ -117,4 +120,4 @@ module.exports = (persist, decorate) ->
         # load the start model
         load(start, stop)
 
-    {save, setnew, edit, load, month, delet}
+    {save, setnew, edit, load, month, delet, update, erase}

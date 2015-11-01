@@ -5,9 +5,10 @@ _store = {}
 
 # sets a value in the store
 set = (k) -> (v) -> store[k] = v; v
+get = (k) -> -> store[k]
 
 # exposed store
-module.exports = store = {set}
+module.exports = store = {set, get}
 
 define = (prop) -> Object.defineProperty store, prop,
     enumerable: true

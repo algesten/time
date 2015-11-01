@@ -1,4 +1,4 @@
-{pipe, iif, get, converge, maybe}  = require 'fnuc'
+{pipe, iif, get, converge, maybe, each, I}  = require 'fnuc'
 {updated, handle} = require 'trifl'
 moment            = require 'moment'
 doaction          = require 'lib/doaction'
@@ -6,8 +6,8 @@ doaction          = require 'lib/doaction'
 # start socket.io
 socket = io()
 
-# server sends us the signal to do stuff
-socket.on 'startup', doaction('startup')
+# server sends us signals to do stuff
+each ['startup', 'updated entry', 'deleted entry'], (n) -> socket.on n, doaction(n)
 
 # function for emitting events
 emit = socket.emit.bind(socket)
@@ -52,14 +52,20 @@ handle 'loaded', trans('ready')
 # parse new input and update the store
 handle 'new input', pipe entries.setnew, store.set('entries')
 
-# (attempt to) save the current input to a new entry, and then update
-# the store.
+# save the current input to a new entry, and then update the store.
 handle 'save input',  pipe entries.save, maybe doaction('saved input')
 handle 'saved input', store.set('entries')
+
+# updates from the server
+handle 'updated entry',
+    converge store.get('entries'), I, pipe entries.update, store.set('entries')
 
 # start editing an existing entry
 handle 'edit entry', pipe entries.edit, store.set('entries')
 
 # delete existing entry
-handle 'delete entry', pipe entries.delet, doaction('deleted entry')
-handle 'deleted entry', store.set('entries')
+handle 'delete entry', pipe entries.delet
+
+# delete from server
+handle 'deleted entry',
+    converge store.get('entries'), I, pipe entries.erase, store.set('entries')

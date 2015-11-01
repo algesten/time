@@ -8,7 +8,7 @@ mkid = -> shortid.generate()
 # client to es
 client = new elasticsearch.Client
     host: 'localhost:9200'
-    log: 'trace'
+    log: 'info'
     apiVersion: '1.7'
 
 index = 'totlio'
@@ -58,8 +58,8 @@ module.exports = (user) ->
         converge I, converge(get('entryId'), bodyof, doindex('entry')), toresp
 
     delete: do ->
-        toresp = get('found')
-        pipe get('entryId'), dodelete('entry'), toresp
+        delentry = pipe get('entryId'), dodelete('entry')
+        converge delentry, I, iif get('found'), nth(1), always(null)
 
     clients: do ->
         mkquery = -> match_all:{}
@@ -72,8 +72,8 @@ module.exports = (user) ->
         converge I, converge(get('_id'), bodyof, doindex('client')), toresp
 
     deleteclient: do ->
-        toresp = get('found')
-        pipe get('_id'), dodelete('client'), toresp
+        delclient = pipe get('_id'), dodelete('client')
+        converge delclient, I, iif get('found'), nth(1), always(null)
 
     projects: do ->
         mkquery = -> match_all:{}
@@ -86,5 +86,5 @@ module.exports = (user) ->
         converge I, converge(get('_id'), bodyof, doindex('project')), toresp
 
     deleteproject: do ->
-        toresp = get('found')
-        pipe get('_id'), dodelete('project'), toresp
+        delproject = pipe get('_id'), dodelete('project')
+        converge delproject, I, iif get('found'), nth(1), always(null)

@@ -1,4 +1,4 @@
-{pick, each, keys, pfail, pipe, apply} = require 'fnuc'
+{pick, each, keys, pfail, pipe, apply, maybe, tap, I} = require 'fnuc'
 log = require 'bog'
 
 # the original persistence definition
@@ -14,10 +14,15 @@ each keys(shim), (name) ->
 userOf    = (socket) -> socket.request.session?.passport?.user ? {}
 userProps = pick 'id displayName name emails photos'.split(' ')
 
-ok   = (cb) -> (v) -> cb null, v
+ok   = (cb) -> tap (v) -> cb(null, v)
 fail = (cb) -> (e) ->
     log.warn e.stack
     cb e.message
+
+# map of events that are mapped to user room broadcast
+BROADCASTED =
+    save:   'updated entry'
+    delete: 'deleted entry'
 
 module.exports = (socket) ->
 
@@ -31,10 +36,25 @@ module.exports = (socket) ->
     # user.
     if user.id
 
+        # join a channel for userid where we broadcast all
+        # changes to that user. for multiple browser windows.
+        socket.join String user.id
+
         # user wrapped persistence
         persist = persistfor user
 
+        # broadcast certain events
+        broadcast = (name) ->
+            translated = BROADCASTED[name]
+            if translated
+                tap maybe (value) ->
+                    socket.server.to(String user.id).emit translated, value
+            else
+                I
+
         # provide user to every persistence method
-        each keys(shim), (name) -> socket.on name, (as, cb) ->
-            fn = pipe persist[name], ok(cb), pfail(fail cb)
-            fn as...
+        each keys(shim), (name) ->
+            bcast = broadcast(name)
+            socket.on name, (as, cb) ->
+                fn = pipe persist[name], ok(cb), bcast, pfail(fail cb)
+                fn as...

@@ -8,7 +8,7 @@ module.exports =
     # :: entry -> entry
     save: (entry) ->
 
-    # :: entry -> bool
+    # :: entry -> entry
     delete: (entry) ->
 
     # :: (date, date) -> [client]
@@ -17,7 +17,7 @@ module.exports =
     # :: client -> client
     saveclient:  (client) ->
 
-    # :: client -> bool
+    # :: client -> entry
     deleteclient: (client) ->
 
     # :: (date, date) -> [project]
@@ -26,5 +26,5 @@ module.exports =
     # :: project -> project
     saveproject: (project) ->
 
-    # :: project -> bool
+    # :: project -> entry
     deleteproject: (project) ->

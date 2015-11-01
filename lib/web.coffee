@@ -23,7 +23,7 @@ module.exports = (port, path, cb) ->
     require('./auth') app
 
     # start socket.io
-    io     = require('socket.io') server
+    io = require('socket.io') server
 
     # hook up session reading to socket.io
     io.use (socket, next) -> sessionmw socket.request, {}, next
