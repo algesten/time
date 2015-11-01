@@ -28,3 +28,6 @@ module.exports =
 
     # :: project -> entry
     deleteproject: (project) ->
+
+    # :: (s, s) -> report
+    report: (from, to) ->

@@ -1,7 +1,7 @@
 {
   "name": "name",
   "dependencies": {
-    "trifl": "~0.0.10",
+    "trifl": "~0.0.11",
     "fnuc": "~3.0.4",
     "moment": "~2.10.6",
     "creed": "~0.7.4"

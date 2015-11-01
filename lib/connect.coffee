@@ -5,7 +5,7 @@ log = require 'bog'
 shim = require '../app/lib/persist'
 
 # persistence per user
-persistfor = require('./persist')
+persistfor = require './persist'
 
 # sanity check
 each keys(shim), (name) ->
@@ -45,12 +45,9 @@ module.exports = (socket) ->
 
         # broadcast certain events
         broadcast = (name) ->
-            translated = BROADCASTED[name]
-            if translated
-                tap maybe (value) ->
-                    socket.server.to(String user.id).emit translated, value
-            else
-                I
+            event = BROADCASTED[name]
+            emit = tap maybe (value) -> socket.server.to(String user.id).emit event, value
+            if event then emit else I
 
         # provide user to every persistence method
         each keys(shim), (name) ->

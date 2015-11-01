@@ -24,6 +24,7 @@ decorate = (entry) -> clients.decorate store.clients, entry
 # the model handling functions
 clients   = require('lib/clients') persist
 entries   = require('lib/entries') persist, decorate
+reports   = require('lib/reports') persist
 viewstate = require('lib/viewstate')
 
 # viewstate transition
@@ -47,7 +48,7 @@ handle 'startup', pipe store.set('user'),
 # when we loaded new entries/client data
 handle 'loaded entries', store.set('entries')
 handle 'loaded clients', store.set('clients')
-handle 'loaded', trans('ready')
+handle 'loaded', trans('entries')
 
 # parse new input and update the store
 handle 'new input', pipe entries.setnew, store.set('entries')
@@ -71,3 +72,6 @@ handle 'delete entry', pipe entries.delet, doaction('store entries')
 # delete from server
 handle 'deleted entry',
     converge store.get('entries'), I, pipe entries.erase, store.set('entries')
+
+
+module.exports = {emit, persist}

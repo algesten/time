@@ -29,7 +29,6 @@
     "moment": "^2.10.6",
     "passport": "^0.3.0",
     "passport-google-oauth": "^0.2.0",
-    "shortid": "^2.2.4",
     "sinon": "^1.17.1",
     "stylus-brunch": "^1.8.1",
     "uglify-js-brunch": ">= 1.0 < 1.9"

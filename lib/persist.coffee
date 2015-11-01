@@ -1,25 +1,6 @@
 {pipe, iif, I, map, split, pick, mixin, converge, get, nth, always} = require 'fnuc'
-elasticsearch = require 'elasticsearch'
-shortid       = require 'shortid'
 
-# make a new id
-mkid = -> shortid.generate()
-
-# client to es
-client = new elasticsearch.Client
-    host: 'localhost:9200'
-    log: 'info'
-    apiVersion: '1.7'
-
-index = 'totlio'
-
-exists = -> client.indices.exists {index}
-create = -> client.indices.create {index, type:'entry'}
-putmap = (type) -> ->
-    client.indices.putMapping {index, type:type, body:require "./mapping-#{type}"}
-
-# ensure index exists and has the mapping
-do pipe (iif exists, I, create), putmap('entry'), putmap('client'), putmap('project')
+{client, index} = require './elasticclient'
 
 # turn a es hit into an entry/client/project
 toentry   = (hit) -> mixin hit._source, {entryId: hit._id}
@@ -35,6 +16,9 @@ projectprops = pick spc 'projectId clientId title'
 
 # persistence to database
 module.exports = (user) ->
+
+    # report is part of persistence, but separated out
+    report = require('./report') user
 
     # all searches are similar with a user filter
     search = (type, sort) -> (query) -> client.search {index, type, body:
@@ -88,3 +72,5 @@ module.exports = (user) ->
     deleteproject: do ->
         delproject = pipe get('_id'), dodelete('project')
         converge delproject, I, iif get('found'), nth(1), always(null)
+
+    report: report

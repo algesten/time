@@ -1,8 +1,10 @@
-{always, evolve} = require 'fnuc'
+{always, mixin} = require 'fnuc'
 
 module.exports = do ->
 
-    init = -> state: 'disconnected'
-    transition = (model, state) -> evolve model, {state:always(state)}
+    init = ->
+        state: 'disconnected'
+
+    transition = (model, state) -> mixin model, {state}
 
     {init, transition}

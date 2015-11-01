@@ -1,11 +1,15 @@
 {action} = require 'trifl'
 
 # init dispatcher/controller
-require 'dispatcher'
+{emit, persist} = require 'dispatcher'
 require 'view/controller'
 
-# expose store, for easy debugging
-window.store = require 'store'
+store = require 'store'
+
+# expose for easy debugging
+window.emit    = emit
+window.store   = store
+window.persist = persist
 
 # tie applayout to DOM
 document.querySelector('#applayout').appendChild require('view/applayout').el
