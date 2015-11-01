@@ -5,6 +5,8 @@ pick, map, at, tail, concat, join, fold1, nnot, maybe, call} = require 'fnuc'
 minimaldate      = require './minimaldate'
 moment = require 'moment'
 
+ifdef = (fn) -> iif I, fn, I
+
 asUTC = (date) ->
     d = date.toISOString()[0...10]
     new Date "#{d}T00:00:00Z"
@@ -73,7 +75,7 @@ module.exports = (persist, decorate) ->
         finder = pipe nth(1), eqentry, firstfn
         entriesof = pipe nth(0), get('entries')
         toinput  = (entry) -> {editId:entry?.entryId, input:entry}
-        getinput = converge finder, entriesof, pipe call, toinput
+        getinput = converge finder, entriesof, pipe call, ifdef(fixorig), toinput
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
 
     # :: entries -> entries

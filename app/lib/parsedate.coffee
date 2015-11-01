@@ -22,7 +22,7 @@ loc = ->
     formats: ['DD', '[w]WW', 'MMDD', 'DD/MM', 'YYMMDD', 'YYYYMMDD']
     offsets: {t:0, y:-1, d:1, w:-7}
 
-asUTC = (s) -> new Date "#{s}Z"
+asUTC = (s) -> new Date "#{s}T00:00:00Z"
 torel = (offsets) -> _torel = (s) ->
     if s.length then offsets[head(s)] + _torel(tail(s)) else 0
 
