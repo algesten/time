@@ -5,7 +5,7 @@ elasticsearch = require 'elasticsearch'
 client = new elasticsearch.Client
     host: 'localhost:9200'
     log: 'info'
-    apiVersion: '1.7'
+    apiVersion: '2.1'
 
 index = 'totlio'
 
