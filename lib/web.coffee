@@ -29,11 +29,9 @@ module.exports = (port, path, cb) ->
     io.use (socket, next) -> sessionmw socket.request, {}, next
     io.on 'connection', require('./connect')
 
-    # root of static files
-    root = normalize __dirname + '/../' + path
-
-    # set up as static serving
-    app.use express.static root
+    # set up pushstate serving
+    pushstate = require('./pushstate') [path]
+    app.all '/*', pushstate
 
     # listen to port suggested by brunch
     server.listen port
