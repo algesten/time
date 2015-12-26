@@ -4,6 +4,7 @@ store    = require 'store'
 applayout = require './applayout'
 nav       = require './nav'
 sheet     = require './sheet'
+report    = require './report'
 login     = require './login'
 
 handle 'update:viewstate', ->
@@ -11,6 +12,7 @@ handle 'update:viewstate', ->
 
     applayout.mid switch store.viewstate.state
         when 'entries'       then sheet
+        when 'report'        then report
         when 'require login' then login
         else null
 
@@ -18,7 +20,12 @@ handle 'update:viewstate', ->
 
 handle 'update:entries', ->
     update()
+    report.refresh()
+
+handle 'update:reports', ->
+    update()
 
 update = ->
     nav store.viewstate
     sheet.update()
+    report.update()

@@ -15,8 +15,10 @@ module.exports = (user) ->
             ]
 
     aggs = aggs:
-        projects:
-            terms:field:'projectId'
+        permonth:
+            date_histogram:
+                field:'date'
+                interval:'month'
             aggs:
                 seconds:sum:field:'time'
                 perweek:
@@ -25,13 +27,20 @@ module.exports = (user) ->
                         interval:'week'
                     aggs:
                         seconds:sum:field:'time'
+                        projects:
+                            terms:field:'projectId'
+                            aggs:
+                                seconds:sum:field:'time'
 
     rearrange = pipe get('aggregations'), (aggs) ->
-        projects:aggs.projects.buckets.map (p) ->
-            projectId:p.key
-            seconds:p.seconds.value
-            perweek:p.perweek.buckets.map (w) ->
-                date:w.key_as_string
+        permonth:aggs.permonth.buckets.map (m) ->
+            date:m.key
+            seconds:m.seconds.value
+            perweek:m.perweek.buckets.map (w) ->
+                date:w.key
                 seconds:w.seconds.value
+                projects:w.projects.buckets.map (p) ->
+                    projectId:p.key
+                    seconds:p.seconds.value
 
     pipe limit, mixin(size:0), mixin(aggs), run, rearrange

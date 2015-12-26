@@ -1,4 +1,4 @@
-{pipe, iif, get, converge, maybe, each, I}  = require 'fnuc'
+{pipe, iif, get, converge, maybe, each, I, tap}  = require 'fnuc'
 {updated, handle, navigate} = require 'trifl'
 moment   = require 'moment'
 doaction = require 'lib/doaction'
@@ -42,6 +42,11 @@ handle 'init', ->
     # initial viewstate set in store
     store.set('viewstate') viewstate.init()
 
+# initialize report lazily
+handle 'reports init', pipe reports.init, doaction('reports set')
+handle 'reports refresh', pipe store.get('reports'), reports.refresh, doaction('reports set')
+handle 'reports set', store.set('reports')
+
 # when server tells us to start
 handle 'startup', pipe store.set('user'),
     iif get('id'), loadstuff, trans('require login')
@@ -60,16 +65,17 @@ handle 'store entries', store.set('entries')
 # save the current input to a new entry, and then update the store.
 handle 'save input',  pipe entries.save, maybe doaction('store entries')
 
-# updates from the server
-handle 'updated entry',
-    converge store.get('entries'), I, pipe entries.update, store.set('entries')
-
 # start editing an existing entry
 handle 'edit entry', pipe entries.edit, store.set('entries')
 
 # delete existing entry
 handle 'delete entry', pipe entries.delet, doaction('store entries')
 
+log = tap console.log.bind(console)
+
+# updates from the server
+handle 'updated entry',
+    converge store.get('entries'), I, pipe entries.update, store.set('entries')
 # delete from server
 handle 'deleted entry',
     converge store.get('entries'), I, pipe entries.erase, store.set('entries')

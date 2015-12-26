@@ -2,7 +2,8 @@
 log = require 'bog'
 
 # the original persistence definition
-shim = require '../app/lib/persist'
+shim  = require '../app/lib/persist'
+delay = require './delay'
 
 # persistence per user
 persistfor = require './persist'
@@ -46,7 +47,9 @@ module.exports = (socket) ->
         # broadcast certain events
         broadcast = (name) ->
             event = BROADCASTED[name]
-            emit = tap maybe (value) -> socket.server.to(String user.id).emit event, value
+            # delay emit by a second to allow elastic to flush
+            emit = tap maybe (value) -> delay(1000) ->
+                socket.server.to(String user.id).emit event, value
             if event then emit else I
 
         # provide user to every persistence method
