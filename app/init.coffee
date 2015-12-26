@@ -2,7 +2,12 @@
 
 # init dispatcher/controller
 {emit, persist} = require 'dispatcher'
+
+# tell dispatcher to init the stores
+action 'init'
+
 require 'view/controller'
+require './router'
 
 store = require 'store'
 
@@ -13,6 +18,3 @@ window.persist = persist
 
 # tie applayout to DOM
 document.querySelector('#applayout').appendChild require('view/applayout').el
-
-# tell dispatcher to init the stores
-action 'init'

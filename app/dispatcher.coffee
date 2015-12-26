@@ -1,7 +1,8 @@
 {pipe, iif, get, converge, maybe, each, I}  = require 'fnuc'
-{updated, handle} = require 'trifl'
-moment            = require 'moment'
-doaction          = require 'lib/doaction'
+{updated, handle, navigate} = require 'trifl'
+moment   = require 'moment'
+doaction = require 'lib/doaction'
+later    = require './lib/later'
 
 # start socket.io
 socket = io()
@@ -48,7 +49,7 @@ handle 'startup', pipe store.set('user'),
 # when we loaded new entries/client data
 handle 'loaded entries', store.set('entries')
 handle 'loaded clients', store.set('clients')
-handle 'loaded', trans('entries')
+handle 'loaded', pipe store.get('viewstate'), get('showing'), trans, (fn) -> fn()
 
 # parse new input and update the store
 handle 'new input', pipe entries.setnew, store.set('entries')
@@ -73,5 +74,11 @@ handle 'delete entry', pipe entries.delet, doaction('store entries')
 handle 'deleted entry',
     converge store.get('entries'), I, pipe entries.erase, store.set('entries')
 
+# show the page given as arg
+handle 'show',
+    converge store.get('viewstate'), I, pipe viewstate.show, store.set('viewstate')
+
+# navigate to the given path
+handle 'navigate', (p) -> later -> navigate p
 
 module.exports = {emit, persist}

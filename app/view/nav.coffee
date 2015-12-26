@@ -1,16 +1,16 @@
 {each, replace} = require 'fnuc'
 {view, action} = require 'trifl'
-{div, span, pass}  = require('trifl').tagg
+{div, span, pass, a}  = require('trifl').tagg
 
 NAV = [
-    {n:'Entries', v:'entries', i:'icon-clock'}
-    {n:'Report', v:'report', i:'icon-paper-plane'}
+    {n:'Entries', v:'entries', i:'icon-clock', p:'/'}
+    {n:'Report', v:'report', i:'icon-paper-plane', p:'/report'}
 ]
 
-navigate = (state) -> (ev) ->
+navigate = (path) -> (ev) ->
     ev.stopPropagation()
     ev.preventDefault()
-    action 'navigate', state
+    action 'navigate', path
 
 nosp = replace(/ /g, '_')
 
@@ -18,7 +18,7 @@ module.exports = view (viewstate) -> div class:'nav', ->
 
     each NAV, (nav) ->
         clz = if nav.v == viewstate.state then 'selected' else null
-        div class:clz, onclick: navigate(nav.v), ->
+        a class:clz, href:"#{nav.p}", onclick: navigate(nav.p), ->
             div class:"icon #{nav.i}"
             pass nav.n
 
