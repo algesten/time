@@ -10,7 +10,7 @@
   },
   "scripts": {
     "install": "cd lib && npm install",
-    "start": "brunch watch --server",
+    "start": "coffee index.coffee",
     "test": "mocha"
   },
   "dependencies": {
