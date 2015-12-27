@@ -9,7 +9,7 @@ module.exports = (port, path, cb) ->
     app    = express()
     server = require('http').Server app
 
-    app.use cookieParser()
+    app.use cookieParser(process.env.COOKIE_SECRET)
     app.use bodyParser.text()
 
     SESSION_OPTS =
