@@ -13,8 +13,11 @@ index = 'totlio'
 exists = ->
     ex = client.indices.exists {index}
     ex.then (r) ->
-        log.info 'index exists:', r
-        r
+        log.info 'index exists'
+        true
+    , (err) ->
+        return false if err.status == 404
+        throw err
 create = ->
     log.info 'create index'
     client.indices.create {index, type:'entry'}
