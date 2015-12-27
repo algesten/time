@@ -21,6 +21,9 @@ module.exports = (user) ->
                 interval:'month'
             aggs:
                 seconds:sum:field:'time'
+                perclient:
+                    terms:field:'clientId'
+                    aggs:seconds:sum:field:'time'
                 perweek:
                     date_histogram:
                         field:'date'
@@ -29,13 +32,15 @@ module.exports = (user) ->
                         seconds:sum:field:'time'
                         projects:
                             terms:field:'projectId'
-                            aggs:
-                                seconds:sum:field:'time'
+                            aggs:seconds:sum:field:'time'
 
     rearrange = pipe get('aggregations'), (aggs) ->
         permonth:aggs.permonth.buckets.map (m) ->
             date:m.key
             seconds:m.seconds.value
+            perclient:m.perclient.buckets.map (c) ->
+                clientId:c.key
+                seconds:c.seconds.value
             perweek:m.perweek.buckets.map (w) ->
                 date:w.key
                 seconds:w.seconds.value
