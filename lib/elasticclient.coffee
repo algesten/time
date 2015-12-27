@@ -1,4 +1,4 @@
-{pipe, iif, I, pfail} = require 'fnuc'
+{pipe, iif, I, pfail, unary} = require 'fnuc'
 elasticsearch = require 'elasticsearch'
 log = require 'bog'
 
@@ -10,24 +10,18 @@ client = new elasticsearch.Client
 
 index = 'totlio'
 
-exists = ->
-    ex = client.indices.exists {index}
-    ex.then (r) ->
-        log.info 'index exists'
-        true
-    , (err) ->
-        return false if err.status == 404
-        throw err
-create = ->
-    log.info 'create index'
-    client.indices.create {index, type:'entry'}
-putmap = (type) -> ->
+putmap = (type) -> (a) ->
     log.info 'put mapping', type
-    client.indices.putMapping {index, type:type, body:require "./mapping-#{type}"}
+    client.indices.putMapping {index, type, body:require "./mapping-#{type}"}
+
+maybecreate = -> client.indices.exists({index}).then (ex) ->
+    log.info 'index exists', ex
+    unless ex
+        log.info 'create index'
+        client.indices.create {index, type:'entry'}
 
 # ensure index exists and has the mapping
-do pipe (iif exists, I, create), putmap('entry'),
-    putmap('client'), putmap('project'), pfail (err) ->
-        log.warn 'elastic startup failed', err
+do pipe maybecreate, putmap('entry'), putmap('client'), putmap('project'), pfail (err) ->
+    log.warn 'elastic startup failed', err
 
 module.exports = {client, index}
