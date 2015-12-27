@@ -1,5 +1,4 @@
 session      = require 'express-session'
-cookieParser = require 'cookie-parser'
 bodyParser   = require 'body-parser'
 express      = require 'express'
 {normalize}  = require 'path'
@@ -9,9 +8,7 @@ module.exports = (port, path, cb) ->
     app    = express()
     server = require('http').Server app
 
-    app.use cookieParser(process.env.COOKIE_SECRET)
     app.use bodyParser.text()
-
     SESSION_OPTS =
         secret: process.env.COOKIE_SECRET
         resave: false
