@@ -11,7 +11,8 @@
   "scripts": {
     "install": "cd lib && npm install",
     "start": "coffee index.coffee",
-    "test": "mocha"
+    "test": "mocha",
+    "dev": ". env.sh && brunch watch --server"
   },
   "dependencies": {
     "body-parser": "^1.14.1",
