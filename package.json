@@ -14,29 +14,29 @@
     "test": "mocha"
   },
   "dependencies": {
-    "auto-reload-brunch": ">= 1.0 < 1.9",
     "body-parser": "^1.14.1",
     "bog": "^1.0.0",
-    "clean-css-brunch": ">= 1.0 < 1.9",
-    "coffee-script-brunch": "^1.8.3",
-    "css-brunch": ">= 1.0 < 1.9",
     "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "fnuc": "^3.0.6",
-    "javascript-brunch": ">= 1.0 < 1.9",
     "moment": "^2.10.6",
     "passport": "^0.3.0",
-    "passport-google-oauth": "^0.2.0",
-    "sinon": "^1.17.1",
-    "stylus-brunch": "^1.8.1",
-    "uglify-js-brunch": ">= 1.0 < 1.9"
+    "passport-google-oauth": "^0.2.0"
   },
   "devDependencies": {
+    "auto-reload-brunch": "^1.8.1",
     "bower": "^1.7.1",
-    "brunch": "^1.8.5",
+    "brunch": "^2.1.0",
     "chai": "^3.3.0",
+    "clean-css-brunch": "^1.8.0",
     "coffee-script": "^1.10.0",
-    "mocha": "^2.3.3"
+    "coffee-script-brunch": "^1.8.3",
+    "css-brunch": "^1.7.0",
+    "javascript-brunch": "^1.8.0",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.1",
+    "stylus-brunch": "^1.8.1",
+    "uglify-js-brunch": "^1.7.8"
   }
 }
