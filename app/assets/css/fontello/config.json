@@ -29,6 +29,12 @@
       "css": "paper-plane",
       "code": 59395,
       "src": "entypo"
+    },
+    {
+      "uid": "6d6d0efe9717ec2962ef0a77c6210df9",
+      "css": "google",
+      "code": 59396,
+      "src": "zocial"
     }
   ]
 }

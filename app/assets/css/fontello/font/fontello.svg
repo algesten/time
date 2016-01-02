@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2015 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2016 by original authors @ fontello.com</metadata>
 <defs>
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -10,6 +10,7 @@
 <glyph glyph-name="cancel" unicode="&#xe801;" d="m452 194q18-18 18-43t-18-43q-18-16-43-16t-43 16l-132 152-132-152q-18-16-43-16t-43 16q-16 18-16 43t16 43l138 156-138 158q-16 18-16 43t16 43q18 16 43 16t43-16l132-152 132 152q18 16 43 16t43-16q18-18 18-43t-18-43l-138-158z" horiz-adv-x="470" />
 <glyph glyph-name="clock" unicode="&#xe802;" d="m460 810q190 0 325-135t135-325-135-325-325-135-325 135-135 325 135 325 325 135z m0-820q150 0 255 106t105 254q0 150-105 255t-255 105q-148 0-254-105t-106-255q0-148 106-254t254-106z m36 620l0-244 150-150-50-50-170 170 0 274 70 0z" horiz-adv-x="920" />
 <glyph glyph-name="paper-plane" unicode="&#xe803;" d="m894 720q14 4 22-3t4-19q-2-6-72-310t-74-316q-2-14-14-19t-24 1l-248 134-30 16 22 26q388 420 394 426 4 4-1 9t-9 1l-550-402-112 44-190 76q-12 4-12 12t12 12q8 4 441 157t441 155z m-582-728l0 204 160-82q-130-116-142-128-18-14-18 6z" horiz-adv-x="921" />
+<glyph glyph-name="google" unicode="&#xe804;" d="m0 32q0 87 89 155t215 68l54 0q-42 40-42 86 0 29 16 58-10-1-29-1-104 0-170 65t-66 160q0 91 82 159t187 68l310 0-69-50-98 0q47-18 74-68t26-111q0-93-88-162-37-29-48-46t-11-42q0-19 27-48t54-49q61-43 85-88t23-113q0-90-82-157t-222-66q-133 0-225 50t-92 132z m112 33q0-69 59-118t145-48q119 0 173 44t53 117q0 19-4 32-3 11-7 21t-12 19-14 16-19 16-21 15-25 18-26 17q-39 12-77 12l-4 0q-87 0-153-47-68-48-68-114z m66 559q11-79 61-136t109-58l4 0q56 0 90 52 27 42 27 99 0 16-2 34-10 79-59 134t-110 57l-4 0q-57 0-91-51-27-41-27-98 0-16 2-33z" horiz-adv-x="646" />
 </font>
 </defs>
 </svg>
