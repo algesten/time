@@ -8,7 +8,6 @@ clientfilter = (clientId) -> filter (p) -> p?.projectId?.indexOf(clientId) == 0
 module.exports = view (reports) -> div class:'reportlist', -> ol ->
     {permonth} = reports
     each permonth, (month) -> li ->
-        console.log month
         div class:'mwrap', ->
             div class:'month', moment(month.date).format('MMMM')
             div class:'time mtime',  timeamount month.seconds
