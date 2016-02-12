@@ -21,6 +21,9 @@ module.exports = (user) ->
                 interval:'month'
             aggs:
                 seconds:sum:field:'time'
+                projects:
+                    terms:field:'projectId'
+                    aggs:seconds:sum:field:'time'
                 perclient:
                     terms:field:'clientId'
                     aggs:seconds:sum:field:'time'
@@ -38,6 +41,9 @@ module.exports = (user) ->
         permonth:aggs.permonth.buckets.map (m) ->
             date:m.key
             seconds:m.seconds.value
+            projects:m.projects.buckets.map (p) ->
+                projectId:p.key
+                seconds:p.seconds.value
             perclient:m.perclient.buckets.map (c) ->
                 clientId:c.key
                 seconds:c.seconds.value
