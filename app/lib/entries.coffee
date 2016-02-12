@@ -1,8 +1,10 @@
 {nth, iif, sort, evolve, converge, I, always, tap, sort, pipe, get, flip,
 unapply, apply, mixin, firstfn, eq, indexfn, index, values, split,
-pick, map, at, tail, concat, join, fold1, nnot, maybe, call, sub, fold} = require 'fnuc'
-{append, adjust, remove} = require './immut'
+pick, map, at, tail, concat, join, maybe, call, sub, fold} = require 'fnuc'
+{append, adjust, remove}     = require './immut'
+{tostate, stateis, validate} = require './state'
 minimaldate      = require './minimaldate'
+hasnullvalue     = require './hasnullvalues'
 moment = require 'moment'
 
 {asutc} = require './datefun'
@@ -32,12 +34,8 @@ revtime = do ->
 parse = require './parse'
 
 spc = split ' '
-hasnullvalue = pipe values, fold1((a,b) -> !!a and !!b), nnot
 
 module.exports = (persist, decorate) ->
-
-    # :: string -> entries -> entries
-    tostate = (state) -> evolve {state:always(state)}
 
     # :: entries -> boolean
     isvalid = do ->
@@ -48,16 +46,10 @@ module.exports = (persist, decorate) ->
     # :: string -> entry -> boolean
     eqentry = (entryId) -> pipe(get('entryId'), eq(entryId))
 
-    # :: entries -> entries with update state
-    validate  = iif isvalid, tostate('valid'), tostate('invalid')
-
     # :: (entries, string) -> entries
     setnew = do ->
         doset = (model, entry) -> mixin model, {input:decorate entry}
-        converge nth(0), parse, pipe(doset, validate)
-
-    # :: string -> entries -> entries|null
-    stateis = (state) -> (fn) -> iif pipe(get('state'), eq(state)), fn, always(null)
+        converge nth(0), parse, pipe(doset, validate(isvalid))
 
     # the date may have been entered in a relative way 'yy' which must
     # be adjusted to a fixed date in case it's not the same day anymore.

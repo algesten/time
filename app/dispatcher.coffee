@@ -23,9 +23,10 @@ store = require 'store'
 decorate = (entry) -> clients.decorate store.clients, entry
 
 # the model handling functions
-clients   = require('lib/clients') persist
-entries   = require('lib/entries') persist, decorate
-reports   = require('lib/reports') persist
+clients   = require('lib/clients')  persist
+projects  = require('lib/projects') persist
+entries   = require('lib/entries')  persist, decorate
+reports   = require('lib/reports')  persist
 viewstate = require('lib/viewstate')
 
 # viewstate transition
@@ -33,9 +34,10 @@ trans = (state) -> -> store.set('viewstate') viewstate.transition store.viewstat
 
 # do load month and then dispatch action
 loadstuff = do ->
-    loadentries = pipe entries.month, doaction('loaded entries')
-    loadclients = pipe clients.init,  doaction('loaded clients')
-    pipe trans('loading'), converge loadentries, loadclients, doaction('loaded')
+    loadentries  = pipe entries.month, doaction('loaded entries')
+    loadclients  = pipe clients.init,  doaction('loaded clients')
+    loadprojects = pipe projects.init, doaction('loaded projects')
+    pipe trans('loading'), converge loadentries, loadclients, loadprojects, doaction('loaded')
 
 # when page has just loaded
 handle 'init', ->
@@ -51,9 +53,10 @@ handle 'reports set', store.set('reports')
 handle 'startup', pipe store.set('user'),
     iif get('id'), loadstuff, trans('require login')
 
-# when we loaded new entries/client data
-handle 'loaded entries', store.set('entries')
-handle 'loaded clients', store.set('clients')
+# when we loaded new entries/client/project data
+handle 'loaded entries',  store.set('entries')
+handle 'loaded clients',  store.set('clients')
+handle 'loaded projects', store.set('projects')
 handle 'loaded', pipe store.get('viewstate'), get('showing'), trans, (fn) -> fn()
 
 # parse new input and update the store

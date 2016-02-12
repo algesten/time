@@ -6,9 +6,8 @@ describe 'projects', ->
 
     beforeEach ->
         p =
-            clients:     spy -> [{clientId:'TTN', title:'TT Nyhetsbyrån'}]
-            saveproject: spy (p) -> set shallow(p), '_id', 'saved'
             projects:    spy -> [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
+            saveproject: spy (p) -> set shallow(p), '_id', 'saved'
         c = require('../../../app/lib/projects') p
 
     describe 'init', ->
@@ -33,6 +32,46 @@ describe 'projects', ->
                 m2 = c.addproject m1, {_id:'saved', clientId:'NEW', projectId:'NEW0123', title:'Changed'}
                 eql m2, {projects:[{_id:'saved', clientId:'NEW', projectId:'NEW0123', title:'Changed'}]}
                 eql p.saveproject.args.length, 1
+
+    describe 'setnew', ->
+
+        it 'sets/parses a new client as input', ->
+            m1 = {projects:[], state:''}
+            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}, state:'valid'}
+
+        it 'sets invalid for a bad input', ->
+            m1 = {projects:[], state:''}
+            m2 = c.setnew m1, '', 'ABra Cadabra'
+            eql m2, {projects:[], input:{clientId:undefined, projectId:undefined, title:'ABra Cadabra'}, state:'invalid'}
+
+    describe 'update', ->
+
+        it 'adds new', ->
+            m1 = {projects:[], state:''}
+            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            m3 = c.update m2, m2.input
+            eql m3.projects, [{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}]
+
+        it 'replaces equal', ->
+            m1 = {projects:[{projectId:'TTN001'},{projectId:'ABC0123', title:'panda'}]}
+            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            m3 = c.update m2, m2.input
+            eql m3.projects, [{projectId:'TTN001'},{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}]
+
+    describe 'save', ->
+
+        it 'saves the current input', ->
+            m1 = {projects:[], state:''}
+            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            m3 = c.save m2
+            eql m3, {input:null, projects:[{_id:'saved', clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}], state:'saved'}
+
+        it 'wont save invalid', ->
+            m1 = {projects:[], state:''}
+            m2 = c.setnew m1, 'a', 'ABra Cadabra'
+            m3 = c.save m2
+            eql m3, null
 
     describe 'decorate', ->
 
