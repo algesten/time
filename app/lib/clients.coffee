@@ -5,14 +5,13 @@ module.exports = (persist) ->
 
     # :: * -> clients
     init = do ->
-        doinit = (clients, projects) -> {clients, projects}
-        fn = converge persist.clients, persist.projects, doinit
+        doinit = (clients) -> {clients}
+        fn = pipe persist.clients, doinit
         -> fn() # no arguments
 
     # :: string -> client -> boolean
     _eq = (prop) -> (id) -> pipe(get(prop), eq(id))
     eqclient  = _eq 'clientId'
-    eqproject = _eq 'projectId'
 
     # :: (clients, client) -> clients
     addclient = converge nth(0), pipe(nth(1), persist.saveclient), (model, client) ->
@@ -23,7 +22,6 @@ module.exports = (persist) ->
     # :: (clients, entry) -> entry
     decorate = (model, entry) ->
         client  = firstfn model.clients, eqclient(entry.clientId)
-        project = firstfn model.projects, eqproject(entry.projectId)
-        mixin entry, {_client:client, _project:project}
+        mixin entry, {_client:client}
 
     {init, addclient, decorate}
