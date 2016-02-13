@@ -20,7 +20,8 @@ persist = require('lib/persist-proxy')(emit)
 store = require 'store'
 
 # tie entry decoration to current clients
-decorate = (entry) -> clients.decorate store.clients, entry
+decorate = (entry) ->
+    projects.decorate(store.projects) clients.decorate(store.clients) entry
 
 # the model handling functions
 clients   = require('lib/clients')  persist
@@ -97,10 +98,10 @@ handle 'new input for clients or projects', do ->
     isproject = pipe require('lib/parseproject').grok, (v) -> !!v
     (both, txt) ->
         if isproject(txt)
-            store.set('projects') projects.setnew both.projects, txt, 'XXX'
+            store.set('projects') projects.setnew both.projects, txt
             store.set('clients')  clients.unedit(both.clients) if both.clients.input
         else
-            store.set('clients')  clients.setnew both.clients, txt, 'XXX'
+            store.set('clients')  clients.setnew both.clients, txt
             store.set('projects') projects.unedit(both.projects) if both.projects.input
 
 handle 'save client or project', do ->

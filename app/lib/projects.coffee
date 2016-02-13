@@ -59,8 +59,8 @@ module.exports = (persist) ->
         dosave = converge I, saveinput, pipe update, unedit
         stateis('valid') pipe tostate('saving'), dosave, tostate('saved')
 
-    # :: (model, entry) -> entry
-    decorate = (model, entry) ->
+    # :: (model) -> (entry) -> entry
+    decorate = (model) -> (entry) ->
         project = firstfn model.projects, eqproject(entry.projectId)
         mixin entry, {_project:project}
 

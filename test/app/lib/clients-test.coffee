@@ -92,5 +92,5 @@ describe 'clients', ->
         it 'adds on _client on an entry', ->
             m =
                 clients:[cl = {_id:'saved', clientId:'NEW', title:'New client'}]
-            e = c.decorate m, {clientId:'NEW', projectId:'NEW0001'}
+            e = c.decorate(m) {clientId:'NEW', projectId:'NEW0001'}
             eql e, {clientId:'NEW', projectId:'NEW0001', _client:cl}

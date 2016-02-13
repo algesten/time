@@ -57,8 +57,8 @@ module.exports = (persist) ->
         evolve model,
             clients: (if idx < 0 then append else adjust(idx)) client
 
-    # :: (model, entry) -> entry
-    decorate = (model, entry) ->
+    # :: (model) -> (entry) -> entry
+    decorate = (model) -> (entry) ->
         client  = firstfn model.clients, eqclient(entry.clientId)
         mixin entry, {_client:client}
 

@@ -99,5 +99,5 @@ describe 'projects', ->
         it 'adds on _project on an entry', ->
             m =
                 projects:[pr = {_id:'saved', projectId:'NEW0001', title:'New project'}]
-            e = c.decorate m, {clientId:'NEW', projectId:'NEW0001'}
+            e = c.decorate(m) {clientId:'NEW', projectId:'NEW0001'}
             eql e, {clientId:'NEW', projectId:'NEW0001', _project:pr}
