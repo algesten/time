@@ -1,6 +1,7 @@
 {each, map, pipe, get, add, apply} = require 'fnuc'
 {view, action} = require 'trifl'
 {ol, li, div} = require('trifl').tagg
+stop       = require 'lib/stop'
 groupby    = require 'lib/groupby'
 datediff   = require 'lib/datediff'
 timeamount = require 'lib/timeamount'
@@ -25,14 +26,11 @@ module.exports = view (entries) -> ol class:'entrylist', ->
                                 action 'delete entry', entries, e
                         div class:'interpret', -> interpret.fn(true, entries)
                         div class:'input', -> input.fn(true, entries)
-                    , onclick: (ev) ->
-                        ev.stopPropagation()
+                    , onclick: stop (ev) -> false # no clickyclick
             else
                 li class:'entry', ->
                     div class:'title',      e.title
                     div class:'project-id', e.projectId
                     div class:'time',       timeamount e.time
-                , onclick: (ev) ->
-                    ev.stopPropagation()
-                    ev.preventDefault()
+                , onclick: stop (ev) ->
                     action 'edit entry', entries, e.entryId

@@ -22,8 +22,12 @@ fail = (cb) -> (e) ->
 
 # map of events that are mapped to user room broadcast
 BROADCASTED =
-    save:   'updated entry'
-    delete: 'deleted entry'
+    save:          'updated entry'
+    delete:        'deleted entry'
+    saveclient:    'updated client'
+    deleteclient:  'deleted client'
+    saveproject:   'updated project'
+    deleteproject: 'deleted project'
 
 module.exports = (socket) ->
 

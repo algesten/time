@@ -1,5 +1,5 @@
 {converge, indexfn, eq, get, nth, pipe, evolve, firstfn, mixin,
-always, iif, split, pick, I, match, aand, sort} = require 'fnuc'
+always, iif, split, pick, I, match, aand, sort, call, keyval} = require 'fnuc'
 {append, adjust, remove}     = require './immut'
 {tostate, stateis, validate} = require './state'
 parseclient  = require './parseclient'
@@ -11,7 +11,7 @@ module.exports = (persist) ->
 
     # :: * -> model
     init = do ->
-        doinit = (clients) -> {clients, state:null, input:null}
+        doinit = (clients) -> {clients, state:null, input:null, editId:null}
         fn = pipe persist.clients, doinit
         -> fn() # no arguments
 
@@ -19,17 +19,24 @@ module.exports = (persist) ->
     _eq = (prop) -> (id) -> pipe(get(prop), eq(id))
     eqclient  = _eq 'clientId'
 
+    # :: (model) -> boolean
+    isedit = (model) -> !!model?.editId
+
     # :: model -> boolean
     isnotvalid = do ->
         props = spc 'clientId title'
         notnull = pipe get('input'), pick(props), iif hasnullvalue, always('nullval'), always(null)
+        doexists = (model) -> indexfn(model.clients, eqclient(model.input.clientId)) >= 0
         notexists = (model) ->
-            'exists' if indexfn(model.clients, eqclient(model.input.clientId)) >= 0
+            'exists' if !isedit(model) and doexists(model)
         converge notexists, notnull, (a, b) -> a ? b
+
+    mkeyval = (k, v) -> if v then keyval(k,v) else null
 
     # :: (model, string, string) -> model
     setnew = do ->
-        doset = (model, clientId, title) -> mixin model, {input:{clientId, title}}
+        doset = (model, clientId, title) ->
+            mixin model, input:mixin({clientId, title}, mkeyval('_id',model?.input?._id))
         splitter = pipe match(/^\s*(\w{3})(?:\s+(.*?))?\s*$/), iif I, I, always([])
         fn = pipe doset, validate(isnotvalid)
         (model, txt) ->
@@ -43,8 +50,16 @@ module.exports = (persist) ->
         evolve model,
             clients: pipe (if idx < 0 then append else adjust(idx))(client), sorted
 
+    # :: (model, string) -> model
+    edit = do ->
+        finder = pipe nth(1), eqclient, firstfn
+        clientsof = pipe nth(0), get('clients')
+        toinput  = (client) -> {editId:client?.clientId, input:client}
+        getinput = converge finder, clientsof, pipe call, toinput
+        converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
+
     # model -> model
-    unedit = evolve {input:always(null), state:always(null)}
+    unedit = evolve {input:always(null), state:always(null), editId:always(null)}
 
     # :: model -> model
     save = do ->
@@ -63,4 +78,14 @@ module.exports = (persist) ->
         client  = firstfn model.clients, eqclient(entry.clientId)
         mixin entry, {_client:client}
 
-    {init, addclient, setnew, update, save, unedit, decorate}
+    # :: model, client -> model
+    erase = (model, client) ->
+        idx = indexfn model.clients, eqclient(client.clientId)
+        evolve model, {clients:remove(idx)}
+
+    # :: (model, client) -> model
+    delet = do ->
+        eraseif = iif nth(2), erase, nth(0)
+        converge nth(0), nth(1), pipe(nth(1), persist.deleteclient), pipe eraseif, unedit
+
+    {init, addclient, setnew, update, save, edit, decorate, erase, delet}

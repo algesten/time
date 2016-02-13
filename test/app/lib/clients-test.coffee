@@ -6,8 +6,9 @@ describe 'clients', ->
 
     beforeEach ->
         p =
-            clients:    spy -> [{clientId:'TTN', title:'TT Nyhetsbyrån'}]
-            saveclient: spy (c) -> set shallow(c), '_id', 'saved'
+            clients:      spy -> [{clientId:'TTN', title:'TT Nyhetsbyrån'}]
+            saveclient:   spy (c) -> set shallow(c), '_id', 'saved'
+            deleteclient: spy (c) ->
         c = require('../../../app/lib/clients') p
 
     describe 'init', ->
@@ -16,6 +17,7 @@ describe 'clients', ->
             eql c.init(),
                 input: null
                 state: null
+                editId: null
                 clients:  [{clientId:'TTN', title:'TT Nyhetsbyrån'}]
 
     describe 'addclient', ->
@@ -42,6 +44,11 @@ describe 'clients', ->
             m2 = c.setnew m1, 'abc ABra Cadabra'
             eql m2, {clients:[], input:{clientId:'ABC', title:'ABra Cadabra'}, state:'valid'}
 
+        it 'preserves _id', ->
+            m1 = {clients:[], input:{_id:'id123'}, state:''}
+            m2 = c.setnew m1, 'abc ABra Cadabra'
+            eql m2, {clients:[], input:{clientId:'ABC', title:'ABra Cadabra', _id:'id123'}, state:'valid'}
+
         it 'sets invalid for a bad input', ->
             m1 = {clients:[], state:''}
             m2 = c.setnew m1, 'AB Cadabra'
@@ -58,6 +65,14 @@ describe 'clients', ->
             eql m2,
                 clients:[{clientId:'ABC'}], input:{clientId:'ABC', title:'Fin grej'}
                 state:'exists'
+
+        it 'not set invalid for existing if editId', ->
+            m1 = {clients:[{clientId:'ABC'}], state:'', editId:'ABC'}
+            m2 = c.setnew m1, 'ABC Fin grej'
+            eql m2,
+                editId:'ABC'
+                clients:[{clientId:'ABC'}], input:{clientId:'ABC', title:'Fin grej'}
+                state:'valid'
 
     describe 'update', ->
 
@@ -94,3 +109,13 @@ describe 'clients', ->
                 clients:[cl = {_id:'saved', clientId:'NEW', title:'New client'}]
             e = c.decorate(m) {clientId:'NEW', projectId:'NEW0001'}
             eql e, {clientId:'NEW', projectId:'NEW0001', _client:cl}
+
+    describe 'edit', ->
+
+        it 'for existing it begins editing', ->
+            m1 = {clients:[{clientId:'TTN'},{clientId:'ABC', title:'panda'}]}
+            m2 = c.edit m1, 'ABC'
+            eql m2,
+                clients:[{clientId:'TTN'},{clientId:'ABC', title:'panda'}]
+                editId:'ABC'
+                input:{clientId:'ABC', title:'panda'}

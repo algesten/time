@@ -20,7 +20,6 @@ inputview = view fn = (isedit, entries) -> div ->
         if ev.keyCode is 13 and entries.state == 'valid'
             if not ismod(ev)
                 action 'save input', entries
-                ev.target.value = ''
         else if ev.keyCode is 27
             unselectonce()
         else

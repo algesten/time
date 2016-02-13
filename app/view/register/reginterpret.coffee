@@ -10,6 +10,8 @@ ifstr  = ifdef I
 interpret = view fn = (clients, projects) -> div ->
     # we are either looking at clients or projets
     model = if clients?.input then clients else projects
+    isedit = !!model?.editId
+    model = null if isedit
     isproject = !!model?.input?.projectId
     isclient =  !isproject and !!model?.input?.clientId
     div class:'main', ->

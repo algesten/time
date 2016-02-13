@@ -6,8 +6,9 @@ describe 'projects', ->
 
     beforeEach ->
         p =
-            projects:    spy -> [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
-            saveproject: spy (p) -> set shallow(p), '_id', 'saved'
+            projects:      spy -> [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
+            saveproject:   spy (p) -> set shallow(p), '_id', 'saved'
+            deleteproject: spy (c) ->
         c = require('../../../app/lib/projects') p
 
     describe 'init', ->
@@ -16,6 +17,7 @@ describe 'projects', ->
             eql c.init(),
                 input: null
                 state: null
+                editId: null
                 projects: [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
 
     describe 'addproject', ->
@@ -44,6 +46,11 @@ describe 'projects', ->
             m2 = c.setnew m1, 'abc0123 Some Title'
             eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:'Some Title'}, state:'valid'}
 
+        it 'preserves _id', ->
+            m1 = {projects:[], input:{_id:'id123'}, state:''}
+            m2 = c.setnew m1, 'abc0123 Some Title'
+            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:'Some Title', _id:'id123'}, state:'valid'}
+
         it 'sets invalid for too short input', ->
             m1 = {projects:[], state:''}
             m2 = c.setnew m1, 'abc0123 '
@@ -66,6 +73,14 @@ describe 'projects', ->
                 projects:[{projectId:'ABC0001'}], input:{projectId:'ABC0001', clientId:'ABC', title:'Fin grej'}
                 state:'exists'
 
+        it 'not set invalid for existing if editId', ->
+            m1 = {projects:[{projectId:'ABC0001'}], state:'', editId:'ABC0001'}
+            m2 = c.setnew m1, 'ABC1 Fin grej'
+            eql m2,
+                editId: 'ABC0001'
+                projects:[{projectId:'ABC0001'}], input:{projectId:'ABC0001', clientId:'ABC', title:'Fin grej'}
+                state:'valid'
+
     describe 'update', ->
 
         it 'adds new', ->
@@ -78,7 +93,7 @@ describe 'projects', ->
             m1 = {projects:[{projectId:'TTN001'},{projectId:'ABC0123', title:'panda'}]}
             m2 = c.setnew m1, 'abc0123 ABra Cadabra'
             m3 = c.update m2, m2.input
-            eql m3.projects, [{projectId:'TTN001'},{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}]
+            eql m3.projects, [{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'},{projectId:'TTN001'}]
 
     describe 'save', ->
 
@@ -101,3 +116,13 @@ describe 'projects', ->
                 projects:[pr = {_id:'saved', projectId:'NEW0001', title:'New project'}]
             e = c.decorate(m) {clientId:'NEW', projectId:'NEW0001'}
             eql e, {clientId:'NEW', projectId:'NEW0001', _project:pr}
+
+    describe 'edit', ->
+
+        it 'for existing it begins editing', ->
+            m1 = {projects:[{projectId:'TTN001'},{projectId:'ABC0123', title:'panda'}]}
+            m2 = c.edit m1, 'ABC0123'
+            eql m2,
+                projects:[{projectId:'TTN001'},{projectId:'ABC0123', title:'panda'}]
+                editId:'ABC0123'
+                input:{projectId:'ABC0123', title:'panda'}

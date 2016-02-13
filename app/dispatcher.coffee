@@ -8,7 +8,15 @@ later    = require './lib/later'
 socket = io()
 
 # server sends us signals to do stuff
-each ['startup', 'updated entry', 'deleted entry'], (n) -> socket.on n, doaction(n)
+each [
+    'startup'
+    'updated entry'
+    'deleted entry'
+    'updated client'
+    'deleted client'
+    'updated project'
+    'deleted project'
+    ], (n) -> socket.on n, doaction(n)
 
 # function for emitting events
 emit = socket.emit.bind(socket)
@@ -74,17 +82,24 @@ handle 'save input',  pipe entries.save, maybe doaction('store entries')
 # start editing an existing entry
 handle 'edit entry', pipe entries.edit, store.set('entries')
 
-# delete existing entry
-handle 'delete entry', pipe entries.delet, doaction('store entries')
+# deletions
+deletehandler = (sing, plur, delet) ->
+    handle "delete #{sing}", pipe delet, doaction("store #{plur}")
+deletehandler 'entry',   'entries',  entries.delet
+deletehandler 'client',  'clients',  clients.delet
+deletehandler 'project', 'projects', projects.delet
 
 log = tap console.log.bind(console)
 
 # updates from the server
-handle 'updated entry',
-    converge store.get('entries'), I, pipe entries.update, store.set('entries')
-# delete from server
-handle 'deleted entry',
-    converge store.get('entries'), I, pipe entries.erase, store.set('entries')
+updatehandler = (sing, plur, update, erase) ->
+    handle "updated #{sing}",
+        converge store.get(plur), I, pipe update, store.set(plur)
+    handle "deleted #{sing}",
+        converge store.get(plur), I, pipe erase, store.set(plur)
+updatehandler 'entry',   'entries',  entries.update,  entries.erase
+updatehandler 'client',  'clients',  clients.update,  clients.erase
+updatehandler 'project', 'projects', projects.update, projects.erase
 
 # show the page given as arg
 handle 'show',
@@ -99,15 +114,25 @@ handle 'new input for clients or projects', do ->
     (both, txt) ->
         if isproject(txt)
             store.set('projects') projects.setnew both.projects, txt
-            store.set('clients')  clients.unedit(both.clients) if both.clients.input
+            store.set('clients')  clients.edit(both.clients, '') if both.clients.input
         else
             store.set('clients')  clients.setnew both.clients, txt
-            store.set('projects') projects.unedit(both.projects) if both.projects.input
+            store.set('projects') projects.edit(both.projects, '') if both.projects.input
 
 handle 'save client or project', do ->
     isproject = (model) -> !!model?.input?.projectId
     saveproject = pipe projects.save, maybe doaction('store projects')
     saveclient  = pipe clients.save,  maybe doaction('store clients')
     iif isproject, saveproject, saveclient
+
+# start editing clients/projects
+handle 'edit client',  do ->
+    edit   = pipe clients.edit,  store.set('clients')
+    unedit = pipe projects.edit, store.set('projects')
+    (cs, id, ps) -> edit(cs, id); unedit(ps, '')
+handle 'edit project', do ->
+    edit   = pipe projects.edit, store.set('projects')
+    unedit = pipe clients.edit,  store.set('clients')
+    (ps, id, cs) -> edit(ps, id); unedit(cs, '')
 
 module.exports = {emit, persist}
