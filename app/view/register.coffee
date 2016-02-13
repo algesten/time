@@ -18,5 +18,5 @@ register.update = ->
     return unless store.viewstate.state == 'register'
     {clients, projects} = store
     if clients and projects
-        controls clients, projects
+        controls.update clients, projects
         reglist clients, projects

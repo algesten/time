@@ -15,7 +15,7 @@ interpret = view fn = (isedit, entries) -> div ->
     doedit = !isedit == !entries?.editId
     input = if doedit then entries?.input else null
     div class:'main', ->
-        div class:'input-holder', ->
+        div class:'input-holder', -> # used when editing existing
         div class:'project-id', ifstr input?.projectId
         div class:'time',  iftime input?.time
         if doedit and entries?.state == 'valid'

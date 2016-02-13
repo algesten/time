@@ -1,14 +1,13 @@
-{view, action} = require 'trifl'
-{div, button}  = require('trifl').tagg
+{layout, region} = require 'trifl'
+{div}  = require('trifl').tagg
 
-stop = (ev) ->
-    ev.stopPropagation()
-    ev.preventDefault()
+reginput = require './reginput'
 
-module.exports = regcontrols = view -> div class:'regcontrols', ->
-    button 'Add Client', onclick: (ev) ->
-        stop ev
-    button 'Add Project', onclick: (ev) ->
-        stop ev
+module.exports = regcontrols = layout -> div class:'regcontrols', ->
+    div class:'interpret', region('interpret')
+    div class:'input',     region('input')
 
-regcontrols()
+regcontrols.input reginput
+
+regcontrols.update = (clients, projects) ->
+    reginput clients, projects

@@ -2,7 +2,7 @@
 {view, action} = require 'trifl'
 {input, div} = require('trifl').tagg
 later = require 'lib/later'
-ismod = (ev) -> ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey
+ismod = require './ismod'
 
 clickdoc = do ->
     cur = null # current handler so we don't leak
