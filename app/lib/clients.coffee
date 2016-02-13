@@ -1,5 +1,5 @@
 {converge, indexfn, eq, get, nth, pipe, evolve, firstfn, mixin,
-always, iif, split, pick, I} = require 'fnuc'
+always, iif, split, pick, I, match} = require 'fnuc'
 {append, adjust, remove}     = require './immut'
 {tostate, stateis, validate} = require './state'
 parseclient  = require './parseclient'
@@ -11,7 +11,7 @@ module.exports = (persist) ->
 
     # :: * -> model
     init = do ->
-        doinit = (clients) -> {clients}
+        doinit = (clients) -> {clients, state:null, input:null}
         fn = pipe persist.clients, doinit
         -> fn() # no arguments
 
@@ -19,17 +19,20 @@ module.exports = (persist) ->
     _eq = (prop) -> (id) -> pipe(get(prop), eq(id))
     eqclient  = _eq 'clientId'
 
-    # :: entries -> boolean
+    # :: model -> boolean
     isvalid = do ->
         props = spc 'clientId title'
         check = iif pipe(pick(props), hasnullvalue), always(false), always(true)
         pipe get('input'), check
 
-    # :: (model, string, string) -> entries
+    # :: (model, string, string) -> model
     setnew = do ->
         doset = (model, clientId, title) -> mixin model, {input:{clientId, title}}
+        splitter = pipe match(/^\s*(\w{3})\s*(.*?)\s*$/), iif I, I, always([])
         fn = pipe doset, validate(isvalid)
-        (model, clientId, title) -> fn model, parseclient(clientId), title
+        (model, txt) ->
+            [_, idpart, title] = splitter txt
+            fn model, parseclient(idpart), title
 
     # :: model, client -> model
     update = (model, client) ->
@@ -37,8 +40,8 @@ module.exports = (persist) ->
         evolve model,
             clients: (if idx < 0 then append else adjust(idx))(client)
 
-    # entries -> entries
-    unedit = evolve {editId:always(null), input:always(null)}
+    # model -> model
+    unedit = evolve {input:always(null), state:always(null)}
 
     # :: model -> model
     save = do ->
@@ -57,4 +60,4 @@ module.exports = (persist) ->
         client  = firstfn model.clients, eqclient(entry.clientId)
         mixin entry, {_client:client}
 
-    {init, addclient, setnew, update, save, decorate}
+    {init, addclient, setnew, update, save, unedit, decorate}

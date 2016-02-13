@@ -62,8 +62,10 @@ handle 'loaded', pipe store.get('viewstate'), get('showing'), trans, (fn) -> fn(
 # parse new input and update the store
 handle 'new input', pipe entries.setnew, store.set('entries')
 
-# put the given entries to the store
-handle 'store entries', store.set('entries')
+# put the given thing to the store
+handle 'store entries',  store.set('entries')
+handle 'store projects', store.set('projects')
+handle 'store clients',  store.set('clients')
 
 # save the current input to a new entry, and then update the store.
 handle 'save input',  pipe entries.save, maybe doaction('store entries')
@@ -89,5 +91,22 @@ handle 'show',
 
 # navigate to the given path
 handle 'navigate', (p) -> later -> navigate p
+
+handle 'new input for clients or projects', do ->
+    # test if given string is a project
+    isproject = pipe require('lib/parseproject').grok, (v) -> !!v
+    (both, txt) ->
+        if isproject(txt)
+            store.set('projects') projects.setnew both.projects, txt, 'XXX'
+            store.set('clients')  clients.unedit(both.clients) if both.clients.input
+        else
+            store.set('clients')  clients.setnew both.clients, txt, 'XXX'
+            store.set('projects') projects.unedit(both.projects) if both.projects.input
+
+handle 'save client or project', do ->
+    isproject = (model) -> !!model?.input?.projectId
+    saveproject = pipe projects.save, maybe doaction('store projects')
+    saveclient  = pipe clients.save,  maybe doaction('store clients')
+    iif isproject, saveproject, saveclient
 
 module.exports = {emit, persist}

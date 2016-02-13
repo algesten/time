@@ -84,7 +84,7 @@ module.exports = (persist, decorate) ->
         evolve model, {entries:remove(idx)}
 
     # entries -> entries
-    unedit = evolve {editId:always(null), input:always(null)}
+    unedit = evolve {editId:always(null), input:always(null), state:always(null)}
 
     # :: entries -> entries
     save = do ->

@@ -1,5 +1,5 @@
 {converge, indexfn, eq, get, nth, pipe, evolve, firstfn, mixin, split,
-iif, pick, always, I} = require 'fnuc'
+iif, pick, always, I, match} = require 'fnuc'
 {append, adjust, remove}     = require './immut'
 {tostate, stateis, validate} = require './state'
 parseclient  = require './parseclient'
@@ -12,7 +12,7 @@ module.exports = (persist) ->
 
     # :: * -> model
     init = do ->
-        doinit = (projects) -> {projects}
+        doinit = (projects) -> {projects, state:null, input:null}
         fn = pipe persist.projects, doinit
         -> fn() # no arguments
 
@@ -26,9 +26,11 @@ module.exports = (persist) ->
     setnew = do ->
         doset = (model, clientId, projectId, title) ->
             mixin model, {input:{clientId, projectId, title}}
+        splitter = pipe match(/^\s*(\w{4,7})\s*(.*?)\s*$/), iif I, I, always([])
         fn = pipe doset, validate(isvalid)
-        (model, projectId, title) ->
-            fn model, parseclient(projectId), parseproject(projectId), title
+        (model, txt) ->
+            [_, idpart, title] = splitter txt
+            fn model, parseclient(idpart), parseproject(idpart), title
 
     # :: string -> model -> boolean
     _eq = (prop) -> (id) -> pipe(get(prop), eq(id))
@@ -46,8 +48,8 @@ module.exports = (persist) ->
         evolve model,
             projects: (if idx < 0 then append else adjust(idx))(project)
 
-    # entries -> entries
-    unedit = evolve {editId:always(null), input:always(null)}
+    # model -> model
+    unedit = evolve {input:always(null), state:always(null)}
 
     # :: model -> model
     save = do ->
@@ -60,4 +62,4 @@ module.exports = (persist) ->
         project = firstfn model.projects, eqproject(entry.projectId)
         mixin entry, {_project:project}
 
-    {init, setnew, addproject, update, save, decorate}
+    {init, setnew, addproject, update, save, unedit, decorate}

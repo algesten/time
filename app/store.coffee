@@ -15,4 +15,4 @@ define = (prop) -> Object.defineProperty store, prop,
     get: -> _store[prop]
     set: (v) -> _store[prop] = v; updated(prop); v
 
-'user viewstate entries clients reports'.split(' ').forEach define
+'user viewstate entries clients projects reports'.split(' ').forEach define

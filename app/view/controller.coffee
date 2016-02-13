@@ -27,6 +27,12 @@ handle 'update:entries', ->
 handle 'update:reports', ->
     update()
 
+handle 'update:clients', ->
+    update()
+
+handle 'update:projects', ->
+    update()
+
 update = ->
     nav store.viewstate
     sheet.update()

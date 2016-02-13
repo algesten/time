@@ -14,6 +14,8 @@ describe 'projects', ->
 
         it 'initialises from persistence', ->
             eql c.init(),
+                input: null
+                state: null
                 projects: [{projectId:'TTN0001', clientId:'TTN', title:'Möten'}]
 
     describe 'addproject', ->
@@ -23,7 +25,9 @@ describe 'projects', ->
             it 'saves the client and appends to the model', ->
                 m1 = {projects:[]}
                 m2 = c.addproject m1, {projectId:'NEW0123', clientId:'NEW', title:'New project'}
-                eql m2, {projects:[{_id:'saved', clientId:'NEW', projectId:'NEW0123', title:'New project'}]}
+                eql m2,
+                    projects:[{_id:'saved', clientId:'NEW', projectId:'NEW0123', title:'New project'}]
+
 
         describe 'for an existing project', ->
 
@@ -37,25 +41,30 @@ describe 'projects', ->
 
         it 'sets/parses a new client as input', ->
             m1 = {projects:[], state:''}
-            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
-            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}, state:'valid'}
+            m2 = c.setnew m1, 'abc0123 Some Title'
+            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:'Some Title'}, state:'valid'}
+
+        it 'sets invalid for too short input', ->
+            m1 = {projects:[], state:''}
+            m2 = c.setnew m1, 'abc0123'
+            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:''}, state:'invalid'}
 
         it 'sets invalid for a bad input', ->
             m1 = {projects:[], state:''}
-            m2 = c.setnew m1, '', 'ABra Cadabra'
-            eql m2, {projects:[], input:{clientId:undefined, projectId:undefined, title:'ABra Cadabra'}, state:'invalid'}
+            m2 = c.setnew m1, ''
+            eql m2, {projects:[], input:{clientId:undefined, projectId:undefined, title:undefined}, state:'invalid'}
 
     describe 'update', ->
 
         it 'adds new', ->
             m1 = {projects:[], state:''}
-            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            m2 = c.setnew m1, 'abc0123 ABra Cadabra'
             m3 = c.update m2, m2.input
             eql m3.projects, [{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}]
 
         it 'replaces equal', ->
             m1 = {projects:[{projectId:'TTN001'},{projectId:'ABC0123', title:'panda'}]}
-            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            m2 = c.setnew m1, 'abc0123 ABra Cadabra'
             m3 = c.update m2, m2.input
             eql m3.projects, [{projectId:'TTN001'},{clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}]
 
@@ -63,13 +72,13 @@ describe 'projects', ->
 
         it 'saves the current input', ->
             m1 = {projects:[], state:''}
-            m2 = c.setnew m1, 'abc0123', 'ABra Cadabra'
+            m2 = c.setnew m1, 'abc0123 ABra Cadabra'
             m3 = c.save m2
             eql m3, {input:null, projects:[{_id:'saved', clientId:'ABC', projectId:'ABC0123', title:'ABra Cadabra'}], state:'saved'}
 
         it 'wont save invalid', ->
             m1 = {projects:[], state:''}
-            m2 = c.setnew m1, 'a', 'ABra Cadabra'
+            m2 = c.setnew m1, 'a ABra Cadabra'
             m3 = c.save m2
             eql m3, null
 
