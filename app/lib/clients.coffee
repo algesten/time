@@ -30,7 +30,7 @@ module.exports = (persist) ->
     # :: (model, string, string) -> model
     setnew = do ->
         doset = (model, clientId, title) -> mixin model, {input:{clientId, title}}
-        splitter = pipe match(/^\s*(\w{3})\s*(.*?)\s*$/), iif I, I, always([])
+        splitter = pipe match(/^\s*(\w{3})(?:\s+(.*?))?\s*$/), iif I, I, always([])
         fn = pipe doset, validate(isnotvalid)
         (model, txt) ->
             [_, idpart, title] = splitter txt

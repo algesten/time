@@ -47,6 +47,11 @@ describe 'clients', ->
             m2 = c.setnew m1, 'AB Cadabra'
             eql m2, {clients:[], input:{clientId:undefined, title:undefined}, state:'nullval'}
 
+        it 'sets invalid for too long input', ->
+            m1 = {clients:[], state:''}
+            m2 = c.setnew m1, 'ABCDEF blaha'
+            eql m2, {clients:[], input:{clientId:undefined, title:undefined}, state:'nullval'}
+
         it 'sets invalid for existing', ->
             m1 = {clients:[{clientId:'ABC'}], state:''}
             m2 = c.setnew m1, 'ABC Fin grej'

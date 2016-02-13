@@ -32,7 +32,7 @@ module.exports = (persist) ->
     setnew = do ->
         doset = (model, clientId, projectId, title) ->
             mixin model, {input:{clientId, projectId, title}}
-        splitter = pipe match(/^\s*(\w{4,7})\s*(.*?)\s*$/), iif I, I, always([])
+        splitter = pipe match(/^\s*(\w{3}\d{1,4})\s*(.*?)\s*$/), iif I, I, always([])
         fn = pipe doset, validate(isnotvalid)
         (model, txt) ->
             [_, idpart, title] = splitter txt

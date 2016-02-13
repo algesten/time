@@ -23,11 +23,15 @@ interpret = view fn = (clients, projects) -> div ->
     div class:'sub', ->
         type = if isproject then 'project' else if isclient then 'client' else null
         err = switch model?.state ? ''
-            when 'nullval' then ' (incomplete)'
-            when 'exists'  then ' (already exists)'
+            when 'exists'  then "#{type} already exists"
+            when 'nullval'
+                if type then "#{type} is incomplete" else ''
             else ''
-        if type
-            div class:'result', "Adding #{type} #{err}"
+        if err
+            div class:'err', err
+        else if type
+            div class:'type', "adding new #{type}"
+
 
 interpret()
 
