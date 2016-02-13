@@ -3,10 +3,10 @@ store    = require 'store'
 
 applayout = require './applayout'
 nav       = require './nav'
-sheet     = require './sheet'
-report    = require './report'
-register  = require './register'
 login     = require './login'
+sheet     = require './sheet/sheet'
+report    = require './report/report'
+register  = require './register/register'
 
 handle 'update:viewstate', ->
     applayout.top nav

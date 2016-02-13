@@ -1,8 +1,7 @@
 {view, action} = require 'trifl'
 {div, input}  = require('trifl').tagg
 later = require 'lib/later'
-
-ismod = require './ismod'
+ismod = require 'lib/ismod'
 
 module.exports = reginput = view (model) -> div ->
     input placeholder:'t meeting with boss ttn1 3h', value:'', type:'text', onkeydown: (ev) ->
