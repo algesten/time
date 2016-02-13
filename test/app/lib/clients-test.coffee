@@ -45,7 +45,14 @@ describe 'clients', ->
         it 'sets invalid for a bad input', ->
             m1 = {clients:[], state:''}
             m2 = c.setnew m1, 'AB Cadabra'
-            eql m2, {clients:[], input:{clientId:undefined, title:undefined}, state:'invalid'}
+            eql m2, {clients:[], input:{clientId:undefined, title:undefined}, state:'nullval'}
+
+        it 'sets invalid for existing', ->
+            m1 = {clients:[{clientId:'ABC'}], state:''}
+            m2 = c.setnew m1, 'ABC Fin grej'
+            eql m2,
+                clients:[{clientId:'ABC'}], input:{clientId:'ABC', title:'Fin grej'}
+                state:'exists'
 
     describe 'update', ->
 

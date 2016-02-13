@@ -47,12 +47,19 @@ describe 'projects', ->
         it 'sets invalid for too short input', ->
             m1 = {projects:[], state:''}
             m2 = c.setnew m1, 'abc0123'
-            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:''}, state:'invalid'}
+            eql m2, {projects:[], input:{clientId:'ABC', projectId:'ABC0123', title:''}, state:'nullval'}
 
         it 'sets invalid for a bad input', ->
             m1 = {projects:[], state:''}
             m2 = c.setnew m1, ''
-            eql m2, {projects:[], input:{clientId:undefined, projectId:undefined, title:undefined}, state:'invalid'}
+            eql m2, {projects:[], input:{clientId:undefined, projectId:undefined, title:undefined}, state:'nullval'}
+
+        it 'sets invalid for existing', ->
+            m1 = {projects:[{projectId:'ABC0001'}], state:''}
+            m2 = c.setnew m1, 'ABC1 Fin grej'
+            eql m2,
+                projects:[{projectId:'ABC0001'}], input:{projectId:'ABC0001', clientId:'ABC', title:'Fin grej'}
+                state:'exists'
 
     describe 'update', ->
 

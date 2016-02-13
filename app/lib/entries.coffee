@@ -37,10 +37,10 @@ spc = split ' '
 
 module.exports = (persist, decorate) ->
 
-    # :: entries -> boolean
-    isvalid = do ->
+    # :: entries -> string|null
+    isnotvalid = do ->
         props = spc 'date title projectId time'
-        check = iif pipe(pick(props), hasnullvalue), always(false), always(true)
+        check = iif pipe(pick(props), hasnullvalue), always('nullval'), always(null)
         pipe get('input'), check
 
     # :: string -> entry -> boolean
@@ -49,7 +49,7 @@ module.exports = (persist, decorate) ->
     # :: (entries, string) -> entries
     setnew = do ->
         doset = (model, entry) -> mixin model, {input:decorate entry}
-        converge nth(0), parse, pipe(doset, validate(isvalid))
+        converge nth(0), parse, pipe(doset, validate(isnotvalid))
 
     # the date may have been entered in a relative way 'yy' which must
     # be adjusted to a fixed date in case it's not the same day anymore.

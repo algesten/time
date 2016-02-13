@@ -1,5 +1,5 @@
 {converge, indexfn, eq, get, nth, pipe, evolve, firstfn, mixin,
-always, iif, split, pick, I, match} = require 'fnuc'
+always, iif, split, pick, I, match, aand} = require 'fnuc'
 {append, adjust, remove}     = require './immut'
 {tostate, stateis, validate} = require './state'
 parseclient  = require './parseclient'
@@ -20,16 +20,18 @@ module.exports = (persist) ->
     eqclient  = _eq 'clientId'
 
     # :: model -> boolean
-    isvalid = do ->
+    isnotvalid = do ->
         props = spc 'clientId title'
-        check = iif pipe(pick(props), hasnullvalue), always(false), always(true)
-        pipe get('input'), check
+        notnull = pipe get('input'), pick(props), iif hasnullvalue, always('nullval'), always(null)
+        notexists = (model) ->
+            'exists' if indexfn(model.clients, eqclient(model.input.clientId)) >= 0
+        converge notnull, notexists, (a, b) -> a ? b
 
     # :: (model, string, string) -> model
     setnew = do ->
         doset = (model, clientId, title) -> mixin model, {input:{clientId, title}}
         splitter = pipe match(/^\s*(\w{3})\s*(.*?)\s*$/), iif I, I, always([])
-        fn = pipe doset, validate(isvalid)
+        fn = pipe doset, validate(isnotvalid)
         (model, txt) ->
             [_, idpart, title] = splitter txt
             fn model, parseclient(idpart), title

@@ -75,6 +75,25 @@ describe 'entries', ->
                 state: "valid"
                 userId: "ture"
 
+        it 'sets invalid for incomplete', ->
+            model2 = m.setnew(model, '151011')
+            delete model2.input.modified
+            eql model2,
+                editId: null
+                entries: []
+                input:
+                    clientId: undefined
+                    date: new Date('2015-10-11Z').toISOString()
+                    entryId: null
+                    orig: '151011'
+                    projectId: undefined
+                    time: null
+                    title: ''
+                    userId: 'ture'
+                state: "nullval"
+                userId: "ture"
+
+
     describe 'edit', ->
 
         it 'sets a valid input/editId', ->
