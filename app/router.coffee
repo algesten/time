@@ -7,4 +7,7 @@ route ->
     path '/report', ->
         toshow = 'report'
 
+    path '/register', ->
+        toshow = 'register'
+
     action 'show', toshow

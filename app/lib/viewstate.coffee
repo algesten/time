@@ -1,6 +1,6 @@
 {always, mixin} = require 'fnuc'
 
-PAGES = ['entries', 'report']
+PAGES = ['entries', 'report', 'register']
 
 module.exports = do ->
 

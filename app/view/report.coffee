@@ -18,7 +18,7 @@ report.update = ->
     return unless store.viewstate.state == 'report'
     {reports} = store
     if reports
-        controls.update reports
+        controls   reports
         reportlist reports
     else
         # lazy report init

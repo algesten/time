@@ -3,8 +3,9 @@
 {div, span, pass, a}  = require('trifl').tagg
 
 NAV = [
-    {n:'Entries', v:'entries', i:'icon-clock', p:'/'}
-    {n:'Report', v:'report', i:'icon-paper-plane', p:'/report'}
+    {n:'Entries',  v:'entries',  i:'icon-clock',       p:'/'}
+    {n:'Report',   v:'report',   i:'icon-paper-plane', p:'/report'}
+    {n:'Register', v:'register', i:'icon-vcard',       p:'/register'}
 ]
 
 navigate = (path) -> (ev) ->
