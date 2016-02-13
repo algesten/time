@@ -26,7 +26,7 @@ module.exports = (persist) ->
         notnull = pipe get('input'), pick(props), iif hasnullvalue, always('nullval'), always(null)
         notexists = (model) ->
             'exists' if indexfn(model.projects, eqproject(model.input.projectId)) >= 0
-        converge notnull, notexists, (a, b) -> a ? b
+        converge notexists, notnull, (a, b) -> a ? b
 
     # :: (model, string, string) -> model
     setnew = do ->
