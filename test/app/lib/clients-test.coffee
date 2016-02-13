@@ -71,7 +71,7 @@ describe 'clients', ->
             m1 = {clients:[{clientId:'TTN'},{clientId:'ABC', title:'panda'}]}
             m2 = c.setnew m1, 'abc ABra Cadabra'
             m3 = c.update m2, m2.input
-            eql m3.clients, [{clientId:'TTN'},{clientId:'ABC', title:'ABra Cadabra'}]
+            eql m3.clients, [{clientId:'ABC', title:'ABra Cadabra'},{clientId:'TTN'}]
 
     describe 'save', ->
 

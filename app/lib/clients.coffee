@@ -1,5 +1,5 @@
 {converge, indexfn, eq, get, nth, pipe, evolve, firstfn, mixin,
-always, iif, split, pick, I, match, aand} = require 'fnuc'
+always, iif, split, pick, I, match, aand, sort} = require 'fnuc'
 {append, adjust, remove}     = require './immut'
 {tostate, stateis, validate} = require './state'
 parseclient  = require './parseclient'
@@ -39,8 +39,9 @@ module.exports = (persist) ->
     # :: model, client -> model
     update = (model, client) ->
         idx = indexfn model.clients, eqclient(client.clientId)
+        sorted = sort (c1, c2) -> c1.clientId.localeCompare c2.clientId
         evolve model,
-            clients: (if idx < 0 then append else adjust(idx))(client)
+            clients: pipe (if idx < 0 then append else adjust(idx))(client), sorted
 
     # model -> model
     unedit = evolve {input:always(null), state:always(null)}
