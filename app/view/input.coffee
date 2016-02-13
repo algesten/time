@@ -15,7 +15,7 @@ inputview = view fn = (isedit, entries) -> div ->
     unselectonce = once -> action 'edit entry', entries, ''
     doedit = !entries.editId == !isedit
     setval = (if doedit then val?.orig else '') ? ''
-    input placeholder:'t meeting tst1 2', value:setval, type:'text', onkeydown: (ev) ->
+    input placeholder:'t meeting with boss ttn1 3h', value:setval, type:'text', onkeydown: (ev) ->
         el = ev.target
         if ev.keyCode is 13 and entries.state == 'valid'
             if not ismod(ev)
