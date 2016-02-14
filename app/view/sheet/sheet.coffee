@@ -14,7 +14,7 @@ sheet.controls controls
 sheet.entrylist entrylist
 
 sheet.update = ->
-    {entries} = store
+    {entries, projects} = store
     if entries
         controls.update entries
-        entrylist entries
+        entrylist entries, projects

@@ -12,8 +12,9 @@ input     = require './input'
 grouped = groupby (entry) -> moment(entry.date).format()
 sumof = pipe map(get('time')), apply(add(0))
 
-module.exports = view (entries) -> ol class:'entrylist', ->
+module.exports = view (entries, projects) -> ol class:'entrylist', ->
     gs = grouped entries?.entries ? []
+    projectlookup = require('lib/projectlookup') projects
     each gs, (g) -> li class:'date', datediff(g[0].date), ->
         div class:'totaltime', timeamount sumof g
         ol -> each g, (e) ->
@@ -30,6 +31,9 @@ module.exports = view (entries) -> ol class:'entrylist', ->
             else
                 li class:'entry', ->
                     div class:'title',      e.title
+                    regproj = projectlookup e.projectId
+                    if regproj
+                        div class:'project-title', regproj.title
                     div class:'project-id', e.projectId
                     div class:'time',       timeamount e.time
                 , onclick: stop (ev) ->

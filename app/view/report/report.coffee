@@ -16,10 +16,10 @@ report.reportlist reportlist
 
 report.update = ->
     return unless store.viewstate.state == 'report'
-    {reports} = store
+    {reports, clients, projects} = store
     if reports
         controls   reports
-        reportlist reports
+        reportlist reports, clients, projects
     else
         # lazy report init
         later -> action 'reports init'
