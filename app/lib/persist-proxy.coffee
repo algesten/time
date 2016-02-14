@@ -1,5 +1,4 @@
 {omap} = require 'fnuc'
-{Promise} = require 'creed'
 
 plug = (rs, rj) -> (err, res) -> if err then rj(err) else rs(res)
 

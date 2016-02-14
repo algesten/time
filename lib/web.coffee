@@ -31,7 +31,6 @@ module.exports = (port, path, cb) ->
     app.all '/*', pushstate
 
     # listen to port suggested by brunch
-    server.listen port
+    server.listen port, cb
 
-    # we're done
-    cb()
+    server

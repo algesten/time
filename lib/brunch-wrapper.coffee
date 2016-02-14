@@ -1,1 +1,1 @@
-module.exports = startServer: ({port, path}, cb) -> require('./web') port, path, cb
+module.exports = startServer: (port, path, cb) -> require('./web') port, path, cb
