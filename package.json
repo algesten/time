@@ -9,7 +9,7 @@
     "url": "git@github.com:algesten/fnuc.git"
   },
   "scripts": {
-    "install": "cd lib && npm install",
+    "install": "bower install && cd lib && npm install",
     "build": "brunch b -p",
     "start": "coffee index.coffee",
     "test": "mocha",
