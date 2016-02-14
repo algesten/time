@@ -27,6 +27,7 @@ module.exports = inputview = ->
             if ev.keyCode is 13 and entries.state == 'valid'
                 if not ismod(ev)
                     prevEditId = null
+                    ev.target.value = ''
                     action 'save input', entries
             else if ev.keyCode is 27
                 unselectonce()
