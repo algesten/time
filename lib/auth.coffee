@@ -1,5 +1,5 @@
 passport = require 'passport'
-GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+GoogleStrategy = require('passport-google-oauth20').Strategy
 
 module.exports = (app) ->
 
@@ -20,8 +20,10 @@ module.exports = (app) ->
     app.use passport.session()
 
     # client entry point for starting auth
-    app.get '/auth/google',
-        passport.authenticate 'google', {scope: 'profile email'}
+    app.get '/auth/google', passport.authenticate 'google',
+        scope:          'profile email'
+        accessType:     'online'
+        approvalPrompt: 'auto'
 
     # google callback on successful/not successful auth
     app.get '/auth/google/callback',
