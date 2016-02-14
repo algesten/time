@@ -75,7 +75,7 @@ module.exports = (persist) ->
 
     # :: (model) -> (entry) -> entry
     decorate = (model) -> (entry) ->
-        client  = firstfn model.clients, eqclient(entry.clientId)
+        client  = firstfn (model?.clients ? []), eqclient(entry.clientId)
         mixin entry, {_client:client}
 
     # :: model, client -> model

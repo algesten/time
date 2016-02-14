@@ -75,7 +75,7 @@ module.exports = (persist) ->
 
     # :: (model) -> (entry) -> entry
     decorate = (model) -> (entry) ->
-        project = firstfn model.projects, eqproject(entry.projectId)
+        project = firstfn (model?.projects ? []), eqproject(entry.projectId)
         mixin entry, {_project:project}
 
     # :: model, project -> model
