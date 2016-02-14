@@ -9,13 +9,21 @@ projectfor  = (clientId) -> filter (p) -> p.clientId == clientId
 clientidsof = map (c) -> c.clientId
 othersof    = (clientids) -> filter (p) -> not (p.clientId in clientids)
 
+# remember previous to trigger new value
+# setting when we start new edit
+prevEditId = null
+
 module.exports = view (clients, projects) -> div class:'reglist reportlist', -> ol ->
 
     unselectonce = once -> action 'edit client', clients, '', projects
     model = if clients.input then clients else projects
 
+    doedit = prevEditId != model?.editId
+    prevEditId = model?.editId
+
     drawinput = (id, title) ->
-        input value:title, onfocus: (ev) ->
+        setval = if doedit then value:title else null
+        input setval, onfocus: (ev) ->
             ev.target.select()
         , onkeydown: (ev) ->
             el = ev.target

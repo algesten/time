@@ -7,7 +7,7 @@ module.exports = reginput = view (clients, projects) -> div ->
     # we are either adding a client or a project
     model = if clients?.input then clients else projects
     both = {clients, projects}
-    input placeholder:'ttn/ttn4 name of client/project', value:'', type:'text', onkeydown: (ev) ->
+    input placeholder:'ttn/ttn4 name of client/project', type:'text', onkeydown: (ev) ->
         el = ev.target
         if ev.keyCode is 13 and model?.state == 'valid'
             if not ismod(ev)

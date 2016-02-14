@@ -7,7 +7,7 @@ datediff   = require 'lib/datediff'
 timeamount = require 'lib/timeamount'
 
 interpret = require './interpret'
-input     = require './input'
+input     = require('./input')()
 
 grouped = groupby (entry) -> moment(entry.date).format()
 sumof = pipe map(get('time')), apply(add(0))
@@ -26,7 +26,7 @@ module.exports = view (entries, projects) -> ol class:'entrylist', ->
                             if confirm "Really delete entry?"
                                 action 'delete entry', entries, e
                         div class:'interpret', -> interpret.fn(true, entries)
-                        div class:'input', -> input.fn(true, entries)
+                        div class:'input',     -> input(true, entries)
                     , onclick: stop (ev) -> false # no clickyclick
             else
                 li class:'entry', ->

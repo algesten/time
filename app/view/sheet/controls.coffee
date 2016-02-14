@@ -1,8 +1,8 @@
-{layout, region} = require 'trifl'
+{layout, region, view} = require 'trifl'
 {div}  = require('trifl').tagg
 
 interpret = require './interpret'
-input     = require './input'
+input     = view require('./input')()
 
 module.exports = controls = layout -> div class:'controls', ->
     div class:'interpret', region('interpret')
