@@ -1,5 +1,6 @@
-passport = require 'passport'
 GoogleStrategy = require('passport-google-oauth20').Strategy
+passport   = require 'passport'
+token      = require './token'
 
 module.exports = (app) ->
 
@@ -18,6 +19,24 @@ module.exports = (app) ->
 
     app.use passport.initialize()
     app.use passport.session()
+
+    # phone app verify a JWT token to authenticate session
+    app.post '/auth/token', (req, res) ->
+
+        body = req.body if typeof req.body == 'string'
+        profile = token body
+
+        if typeof profile == 'number'
+            res.status(profile).send 'NOT OK'
+        else if profile
+            req.login profile, (err) ->
+                if err
+                    log.warn 'login failed', err
+                    res.status(400).send 'LOGIN FAILED'
+                else
+                    res.status(200).send 'OK'
+        else
+            res.status(400).send 'FAILED'
 
     # client entry point for starting auth
     app.get '/auth/google', passport.authenticate 'google',
