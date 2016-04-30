@@ -19,12 +19,12 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "bog": "^1.0.0",
-    "elasticsearch": "^10.0.1",
+    "elasticsearch": "^11.0.1",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "fnuc": "^3.0.6",
-    "jsonwebtoken": "^5.7.0",
-    "moment": "^2.10.6",
+    "jsonwebtoken": "^6.2.0",
+    "moment": "^2.13.0",
     "passport": "^0.3.0",
     "passport-google-oauth20": "^1.0.0"
   },

@@ -6,7 +6,7 @@ log = require 'bog'
 client = new elasticsearch.Client
     host: 'localhost:9200'
     log: 'info'
-    apiVersion: '2.1'
+    apiVersion: '2.2'
 
 index = 'totlio'
 
