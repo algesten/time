@@ -3,6 +3,6 @@
 
 module.exports = login = view ->
     div class:'login', -> a href:"auth/google", ->
-        i class:'icon-google', "Log in with Google"
+        i class:'icon-googlex', "Log in with Google"
 
 login()
