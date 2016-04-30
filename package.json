@@ -13,7 +13,8 @@
     "build": "brunch b -p",
     "start": "coffee index.coffee",
     "test": "mocha",
-    "dev": ". env.sh && brunch watch --server"
+    "dev":     "DEV=1 brunch watch --server",
+    "authdev": ". env.sh && brunch watch --server"
   },
   "dependencies": {
     "body-parser": "^1.14.1",
