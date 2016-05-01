@@ -2,28 +2,40 @@
 
 .nav
   display flex
-  margin-top -40px
+  margin-top -60px
+  margin-left 5px
+  @media(min-width: 450px)
+    margin-top -40px
   > a
     noselect()
-    color black
-    text-decoration: none
-    line-height: 40px
-    height: 40px
-    border: 1px solid #ccc
-    background: white
-    cursor: default
-    position: relative
-    margin-right 5px
-    padding 0 15px 0 12px
-    display flex
-    .icon
-      margin-right: 5px
-    &.selected:after
-      content: ""
-      display: block
-      height: 1px
-      width: 100%
-      position: absolute
-      bottom: -1px
-      left: 0
-      background: white
+    color #bbb
+    text-decoration none
+    text-align center
+    display inline-block
+    line-height 60px
+    height 60px
+    padding-top 10px
+    @media(min-width: 450px)
+      line-height 40px
+      height 40px
+      background #fff
+      padding 0 15px 0 10px
+      border: 1px solid #ccc
+      &.selected:after
+        content: ''
+        display block
+        height 3px
+        width: 100%
+        background #fff
+        position absolute
+        bottom -2px
+        left 0
+    > .icon
+      display inline-block
+      padding-right 4px
+    position relative
+    margin-right: 15px
+    &:last-child
+      margin-right 0
+    &.selected
+      color black

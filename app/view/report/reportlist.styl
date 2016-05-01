@@ -6,6 +6,13 @@
     line-height 30px
   .month, .week, .proj, .clnt, .ptitle, .ctitle
     display inline-block
+    width 190px
+    @media(min-width: 450px)
+      width 400px
+  .month
+    padding-left 7px
+    @media(min-width: 450px)
+      padding-left 0
   .month, .mtime
     margin-top 3rem
   .section
