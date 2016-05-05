@@ -2,7 +2,7 @@
   "name": "time",
   "description": "time keeping",
   "author": "Martin Algesten",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "build": "brunch b -p",
     "start": "coffee index.coffee",
     "test": "mocha",
-    "dev":     "DEV=1 brunch watch --server",
+    "dev": "DEV=1 brunch watch --server",
     "authdev": ". env.sh && brunch watch --server"
   },
   "dependencies": {
