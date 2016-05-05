@@ -1,6 +1,6 @@
 {iif, always, partial, I} = require 'fnuc'
 {view, action} = require 'trifl'
-{div}      = require('trifl').tagg
+{div, i}   = require('trifl').tagg
 datediff   = require 'lib/datediff'
 timeamount = require 'lib/timeamount'
 
@@ -20,7 +20,10 @@ interpret = view fn = (isedit, entries) -> div ->
         div class:'project-id', ifstr input?.projectId
         div class:'time',  iftime input?.time
         if doedit and entries?.state == 'valid'
-            div class:'state icon-check'
+            div class:'state-valid', ->
+                i class:'icon-check'
+            , onclick: (ev) ->
+                action 'save input', entries
     div class:'sub', ->
         div class:'date', ifdate input?.date
         div class:'project-title', ifstr input?._project?.title

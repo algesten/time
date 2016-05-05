@@ -1,16 +1,20 @@
+@import '../defs'
 
 .reportlist
   font-size 14px
   ol
     list-style none
     line-height 30px
+    li
+      white-space nowrap
   .month, .week, .proj, .clnt, .ptitle, .ctitle
     display inline-block
     width 190px
     @media(min-width: 450px)
-      width 400px
+      width 450px
   .month
     padding-left 7px
+    color $green
     @media(min-width: 450px)
       padding-left 0
   .month, .mtime
@@ -18,7 +22,7 @@
   .section
     margin 0 -10px 10px
     padding 0 10px
-    border-bottom 1px dotted #888
+    border-bottom 1px dotted $brown
     font-size 16px
   .clnt
     padding-left 20px
@@ -29,11 +33,15 @@
     color #999
   .proj
     padding-left 60px
-  .ptime
-    padding-left 70px
   .time
     display inline
+    color $purple
+  .ptime
+    padding-left 70px
+    color $cyan
+  .mtime
+    color $pink
   .title
     font-size: 12px
     padding-left: 8px
-    color: #888
+    color $cyan

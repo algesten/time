@@ -7,7 +7,7 @@ datediff   = require 'lib/datediff'
 timeamount = require 'lib/timeamount'
 
 interpret = require './interpret'
-input     = require('./input')()
+edit      = require('./edit')
 
 grouped = groupby (entry) -> moment(entry.date).format()
 sumof = pipe map(get('time')), apply(add(0))
@@ -15,7 +15,8 @@ sumof = pipe map(get('time')), apply(add(0))
 module.exports = view (entries, projects) -> ol class:'entrylist', ->
     gs = grouped entries?.entries ? []
     projectlookup = require('lib/projectlookup') projects
-    each gs, (g) -> li class:'date', datediff(g[0].date), ->
+    each gs, (g) -> li ->
+        div class:'date', datediff(g[0].date)
         div class:'totaltime', timeamount sumof g
         ol -> each g, (e) ->
             if entries.editId == e.entryId
@@ -26,7 +27,7 @@ module.exports = view (entries, projects) -> ol class:'entrylist', ->
                             if confirm "Really delete entry?"
                                 action 'delete entry', entries, e
                         div class:'interpret', -> interpret.fn(true, entries)
-                        div class:'input',     -> input(true, entries)
+                        div class:'input',     -> edit(entries)
                     , onclick: stop (ev) -> false # no clickyclick
             else
                 li class:'entry', ->

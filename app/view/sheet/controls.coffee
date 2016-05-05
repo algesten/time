@@ -2,7 +2,7 @@
 {div}  = require('trifl').tagg
 
 interpret = require './interpret'
-input     = view require('./input')()
+input     = require('./input')
 
 module.exports = controls = layout -> div class:'controls', ->
     div class:'interpret', region('interpret')
@@ -13,4 +13,4 @@ controls.input     input
 
 controls.update = (entries) ->
     interpret false, entries
-    input     false, entries
+    input     entries

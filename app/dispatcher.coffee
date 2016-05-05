@@ -4,6 +4,10 @@ moment   = require 'moment'
 doaction = require 'lib/doaction'
 later    = require './lib/later'
 
+handle.debug = (name, fn) -> handle name, (as...) ->
+    console.log name, as...
+    fn as...
+
 # start socket.io
 socket = io()
 
