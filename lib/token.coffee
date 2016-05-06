@@ -1,4 +1,4 @@
-B1;95;0ccerts = require '../google-oauth-certs'
+certs = require '../google-oauth-certs'
 jwt   = require 'jsonwebtoken'
 log   = require 'bog'
 
