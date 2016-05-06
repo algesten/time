@@ -1,4 +1,4 @@
-certs = require '../google-oauth-certs'
+B1;95;0ccerts = require '../google-oauth-certs'
 jwt   = require 'jsonwebtoken'
 log   = require 'bog'
 
@@ -22,7 +22,7 @@ module.exports = (token) ->
     kid = decoded.header.kid
 
     # and the corresponding cert
-    cert = certs[kid] ? 'wrong'
+    cert = certs[kid]
 
     # no such cert?!
     unless cert
