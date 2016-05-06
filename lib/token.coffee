@@ -5,7 +5,6 @@ log   = require 'bog'
 options =
     issuer:   'https://accounts.google.com'
     audience: process.env.AUTH_GOOGLE_AUDIENCE_ID
-    algorithms: [ 'RS256','RS384','RS512','ES256','ES384','ES512' ]
 
 module.exports = (token) ->
 

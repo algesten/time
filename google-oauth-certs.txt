@@ -1,13 +1,4 @@
 
 I downloaded the certs from: https://www.googleapis.com/oauth2/v1/certs
 
-I converted the certs from x509 to public keys in PKCS#8
-
-(cert was on the form -----BEGIN CERTIFICATE-----)
-
-openssl x509 -in ./cert1 -noout -pubkey
-
-(this gave me something like -----BEGIN PUBLIC KEY-----)
-
-(don't think this post is useful)
 Following this post: http://stackoverflow.com/questions/20159782/how-can-i-decode-a-google-oauth-2-0-jwt-openid-connect-in-a-node-app
