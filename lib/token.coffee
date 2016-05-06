@@ -35,7 +35,7 @@ module.exports = (token) ->
     catch err
         if err.name == 'TokenExpiredError'
             return 422 # Unprocessable Entity
-        log.warn 'Failed to verify cert for:', decoded
+        log.warn 'Failed to verify cert for:', decoded, err
         return 400
 
     # at this point decoded is also verified
