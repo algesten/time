@@ -1,6 +1,7 @@
 GoogleStrategy = require('passport-google-oauth20').Strategy
 passport   = require 'passport'
 token      = require './token'
+log        = require 'bog'
 
 module.exports = (app) ->
 
