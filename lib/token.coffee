@@ -48,29 +48,31 @@ verify = (token, cert, decoded) ->
         throw 400
 
 
+toprofile = (pay) ->
+
+    # make a similar structure to what we get if we do a
+    # passport auth
+    # { id: '110994664963851875523',
+    #   displayName: 'Martin Algesten',
+    #   name: { familyName: 'Algesten', givenName: 'Martin' },
+    #   emails: [ { value: 'martin@algesten.se', type: 'account' } ]
+    # }
+    {
+        id: pay.sub
+        displayName: pay.name
+        name: { familyName: pay.family_name, givenName:pay.given_name }
+        emails: [ { value:pay.email, type:'account' } ]
+    }
+
 module.exports = (token) ->
 
     # decode the token without verifying
     Promise.resolve(token).then(decode).then (decoded) ->
 
         # grab the latest set of certs and verify
-        certfor(decoded).then (cert) -> verify token, cert, decoded
-
-    .then ->
-
-        # at this point decoded is also verified
-        pay = decoded.payload
-
-        # make a similar structure to what we get if we do a
-        # passport auth
-        # { id: '110994664963851875523',
-        #   displayName: 'Martin Algesten',
-        #   name: { familyName: 'Algesten', givenName: 'Martin' },
-        #   emails: [ { value: 'martin@algesten.se', type: 'account' } ]
-        # }
-        {
-            id: pay.sub
-            displayName: pay.name
-            name: { familyName: pay.family_name, givenName:pay.given_name }
-            emails: [ { value:pay.email, type:'account' } ]
-        }
+        certfor(decoded).then (cert) ->
+            verify token, cert, decoded
+        .then ->
+            # and return the (now verified) payload
+            decoded.payload
+        .then toprofile
