@@ -22,21 +22,20 @@ module.exports = (app) ->
 
     # phone app verify a JWT token to authenticate session
     app.post '/auth/token', (req, res) ->
-
         body = req.body if typeof req.body == 'string'
-        profile = token body
-
-        if typeof profile == 'number'
-            res.status(profile).send 'NOT OK'
-        else if profile
+        token(body).then (profile) ->
             req.login profile, (err) ->
                 if err
                     log.warn 'login failed', err
-                    res.status(400).send 'LOGIN FAILED'
+                    res.status(500).send 'LOGIN FAILED'
                 else
                     res.status(200).send 'OK'
-        else
-            res.status(400).send 'FAILED'
+        .catch (err) ->
+            if typeof err == 'number'
+                res.status(err).send 'NOT OK'
+            else
+                log.warn 'Token failed', err
+                res.status(500).send 'FAILED'
 
     # client entry point for starting auth
     app.get '/auth/google', passport.authenticate 'google',

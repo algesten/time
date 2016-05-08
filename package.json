@@ -26,7 +26,8 @@
     "jsonwebtoken": "^6.2.0",
     "moment": "^2.13.0",
     "passport": "^0.3.0",
-    "passport-google-oauth20": "^1.0.0"
+    "passport-google-oauth20": "^1.0.0",
+    "request": "^2.72.0"
   },
   "devDependencies": {
     "auto-reload-brunch": "^1.8.1",
