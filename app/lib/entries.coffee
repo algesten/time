@@ -31,6 +31,17 @@ revtime = do ->
 #   - input        entry of current input
 #   - editId       String id of entry being edited
 
+# entry:
+#    clientId:  "TTN"
+#    date:      "2016-04-08T00:00:00.000Z"
+#    entryId:   "AVP2zkbdxAJk-63ZF8GO"
+#    modified:  "2016-04-08T16:57:22.623Z"
+#    orig:      "t slangen ttn2 4"
+#    projectId: "TTN0002"
+#    time:      14400
+#    title:     "slangen"
+#    userId:    1109941875523
+
 parse = require './parse'
 
 spc = split ' '
