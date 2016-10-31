@@ -21,3 +21,23 @@ $purple = #6c71c4
 $green  = #859900
 $brown  = #b58900
 $yellow = #f5de96
+
+keyframes rotate  {
+    0% {}
+    100% {
+      transform: rotate(360deg)
+    }
+}
+
+@-webkit-keyframes rotate  {
+    0% {}
+    100% {
+      -webkit-transform rotate(-360deg)
+    }
+}
+
+.icon-running:before
+    content '$'
+    width 13px;
+    animation rotate 0.5s linear infinite normal
+    -webkit-animation rotate 0.5s linear infinite normal

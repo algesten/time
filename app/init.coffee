@@ -1,20 +1,24 @@
-{action} = require 'trifl'
+{render}        = require 'react-dom'
+{createFactory} = require 'react'
+{createStore, Provider} = require 'refnux'
+app             = require 'comp/app'
+wrap            = require 'react-elem'
 
-# init dispatcher/controller
-{emit, persist} = require 'dispatcher'
+# the store with state
+store = window.store = createStore require('model')
 
-# tell dispatcher to init the stores
-action 'init'
+init = ->
+    # kick it off by initializing the routing
+    require('./route') store.dispatch
 
-require 'view/controller'
-require './router'
+# start socket io
+require('./io') store.dispatch
 
-store = require 'store'
+socket.on 'user', ({username, userId, info}) ->
+    #store.dispatch -> {username, userId, pinfo:info}
+    init()
 
-# expose for easy debugging
-window.emit    = emit
-window.store   = store
-window.persist = persist
+provider = wrap createFactory Provider
 
-# tie applayout to DOM
-document.querySelector('#applayout').appendChild require('view/applayout').el
+# and bind state to app
+render provider({store, app}), document.querySelector('#app')
