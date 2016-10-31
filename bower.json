@@ -1,9 +1,0 @@
-{
-  "name": "name",
-  "dependencies": {
-    "trifl": "~1.0.1",
-    "fnuc": "~3.0.4",
-    "moment": "~2.10.6"
-  },
-  "private": true
-}
