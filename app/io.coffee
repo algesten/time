@@ -9,7 +9,7 @@ module.exports = (dispatch) ->
     socket.on 'connect', ->
         flashinfo dispatch, 'Connected'
     socket.on 'disconnect', ->
-        dispatch (state) -> {info:"Not connected"}
+        dispatch (state) -> {info:"Reconnecting…", running:true}
 
-    # expose globally
-    window.emit = socket.emit.bind(socket)
+    # expose globally and return
+    return window.emit = socket.emit.bind(socket)
