@@ -29,7 +29,7 @@
     "passport-google-oauth20": "^1.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-elem": "^1.0.3",
+    "react-elem": "^1.0.4",
     "refnux": "^1.2.1",
     "request": "^2.72.0",
     "socket.io": "^1.3.7"

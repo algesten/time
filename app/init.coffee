@@ -7,16 +7,14 @@ wrap            = require 'react-elem'
 # the store with state
 store = window.store = createStore require('model')
 
-init = ->
-    # kick it off by initializing the routing
-    require('./route') store.dispatch
+# kick it off by initializing the routing
+require('./route') store.dispatch, store.state.views
 
 # start socket io
 require('./io') store.dispatch
 
-socket.on 'user', ({username, userId, info}) ->
+socket.on 'startup', ->
     #store.dispatch -> {username, userId, pinfo:info}
-    init()
 
 provider = wrap createFactory Provider
 
