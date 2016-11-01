@@ -1,13 +1,10 @@
 
 module.exports = project:properties:
     userId:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'
     projectId:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'
     clientId:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'
     title:
-        type:  'string'
+        type:  'text'

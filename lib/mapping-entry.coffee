@@ -1,22 +1,19 @@
 
 module.exports = entry:properties:
     userId:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'
     date:
         type:  'date'
     modified:
         type:  'date'
     title:
-        type:  'string'
+        type:  'text'
+        fielddata: true
     time:
         type:  'long'
     clientId:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'
     projectId:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'
     orig:
-        type:  'string'
-        index: 'not_analyzed'
+        type:  'keyword'

@@ -12,7 +12,9 @@ index = 'totlio'
 
 putmap = (type) -> (a) ->
     log.info 'put mapping', type
-    client.indices.putMapping {index, type, body:require "./mapping-#{type}"}
+    client.indices.putMapping {
+        index, type, update_all_types:true, body:require("./mapping-#{type}")
+    }
 
 maybecreate = -> client.indices.exists({index}).then (ex) ->
     log.info 'index exists', ex
