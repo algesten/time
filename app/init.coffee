@@ -19,7 +19,7 @@ do ->
 
     # tie entry decoration to projects/clients
     decorate = (entry) ->
-        projects.decorate(store.projects) clients.decorate(store.clients) entry
+        projects.decorate(store.state.projects) clients.decorate(store.state.clients) entry
 
     # the model handling functions
     clients   = require('lib/clients')  persist

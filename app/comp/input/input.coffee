@@ -1,26 +1,25 @@
 {connect} = require 'refnux'
-{div, span, input, table, tbody} = require('react-elem').DOM
+{div, span, input, table, tbody, form, button} = require('react-elem').DOM
 {stopped} = require '../util'
 row = require '../log/row'
 ismod = require '../../lib/ismod'
 later = require '../../lib/later'
 saveInput = require '../../actions/save-input'
 newInput = require '../../actions/new-input'
+{stopped} = require '../util'
 
-module.exports = connect (state, dispatch) -> div class:'input', ->
+module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
     {entries} = state
-    div class:'main', ->
-        input type:'text', placeholder:'t meeting with boss ttn1 3h', onKeyDown: (ev) ->
-            el = ev.target
-            if ev.keyCode is 13 and entries.state == 'valid'
-                if not ismod(ev)
-                    dispatch saveInput(entries)
-            else
-                # later because we need the innerText to contain the last
-                # pressed character
+    dosave = -> if entries.state == 'valid'
+        dispatch saveInput(entries)
+    form id:'inputform', key:'inputform', ->
+        div key:'input-main', class:'main', ->
+            input key:'input', type:'text', defaultValue:'',
+            placeholder:'t meeting with boss ttn1 3h', onKeyDown: (ev) ->
+                el = ev.target
+                # later, so we get the key just typed in el.value
                 later -> dispatch newInput(entries, el.value)
-
-        div class:'status', ->
-            span class:'icon icon-check'
-    div class:'below', -> table -> tbody ->
-        row 'Today', 'meeting with boss', 'Meetings', 'TT Nyhetsbyrån', '01:00'
+            div class:'status', ->
+                if entries.state == 'valid'
+                    span class:'icon icon-check', onClick: stopped (ev) -> dosave()
+    , onSubmit: stopped (ev) -> dosave()

@@ -22,9 +22,10 @@ module.exports = (user) ->
 
     # all searches are similar with a user filter
     search = (type, sort) -> (query) -> client.search {index, type, body:
-        query:filtered:
-            filter:term:userId:user.id
-            query:query
+        query:query
+            #filtered:
+            #filter:term:userId:user.id
+            #query:query
         size: 10000
         sort:sort}
 
@@ -34,7 +35,8 @@ module.exports = (user) ->
     load: do ->
         mkquery = (start, stop) -> {range:date:{gte:start,lt:stop}}
         toresp  = (res) -> {userId:user.id, entries:map(toentry) res.hits.hits}
-        pipe mkquery, search('entry', [date:'desc', projectId:'asc', title:'asc']), toresp
+        pipe mkquery, search('entry', [date:'desc', projectId:'asc']), toresp
+#        pipe mkquery, search('entry', [date:'desc', projectId:'asc', title:'asc']), toresp
 
     save: do ->
         bodyof = (entry) -> mixin entryprops(entry), userId:user.id

@@ -1,24 +1,27 @@
 @import '../defs'
 
 .entryrow
-  td
-    font-size 0.65em
+  display table-row
+  div
+    display table-cell
+    font-size 0.8em
     line-height 1.4rem
     color $cyan
     padding-right 0.3rem
-    white-space nowrap
-  td:nth-child(1)
+  div:nth-child(1)
     padding-left 1rem
     color $white
     .date
-      color $green
       margin-right 0.5rem
-      font-weight 400
-  td:nth-child(2)
-    width 7rem
-  td:nth-child(3)
-    width 7rem
-  td:nth-child(4)
+    min-width 12rem
+  div:nth-child(2)
+    width 5rem
+    white-space nowrap
+  div:nth-child(3)
+    width 5rem
+    white-space nowrap
+  div:nth-child(4)
     text-align right
     padding-right 1rem
     width 3rem
+    white-space nowrap
