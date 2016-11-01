@@ -30,7 +30,7 @@ module.exports = (port, path, cb) ->
     io = require('socket.io') server
 
     # hook up session reading to socket.io
-    io.use (socket, next) -> sessionmw socket.request, {}, next
+    io.use (socket, next) -> sessionmw socket.request, socket.request.res, next
     io.on 'connection', require('./connect')
 
     # set up pushstate serving
