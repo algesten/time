@@ -22,4 +22,6 @@ module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
             div class:'status', ->
                 if entries.state == 'valid' and not entries.editId?
                     span class:'icon icon-check', onClick: stopped (ev) -> dosave()
-    , onSubmit: stopped (ev) -> dosave()
+    , onSubmit: stopped (ev) ->
+        document.querySelector('#inputform input').value = ''
+        dosave()

@@ -15,3 +15,7 @@ module.exports = connect (state, dispatch) -> div key:'container', class:'contai
         require('./nav/nav')()
         require('./input/input')()
         require('./log/list')()
+    else if view == 'report'
+        require('./nav/nav')()
+    else if view == 'register'
+        require('./nav/nav')()

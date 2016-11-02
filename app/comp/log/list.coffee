@@ -58,14 +58,16 @@ module.exports = connect (state, dispatch) -> div key:'list', class:'list', ->
                                 diddelete = true
                                 dispatch deleteEntry(entries, e)
                             orig = entries.input?.orig
-                            input type:'text', key:"#{key}-1st-input", defaultValue:orig
+                            input class:'rowinput', type:'text',
+                            key:"#{key}-1st-input", defaultValue:orig
                             , onBlur: (ev) ->
                                 # the time between blur and the click event for
                                 # icon-cancel is ridiculously long. 50 is not enough,
                                 # 100 maybe. and if we let the blur happen with
                                 # a redraw, the click event never occurs. we can't win...
                                 setTimeout ->
-                                    dispatch stopEdit(entries) unless diddelete
+                                    isinput = document.activeElement.classList.contains 'rowinput'
+                                    dispatch stopEdit(entries) unless diddelete or isinput
                                 , 150
                             , onKeyDown: (ev) ->
                                 el = ev.target
