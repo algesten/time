@@ -59,7 +59,7 @@ module.exports = (persist, decorate) ->
 
     # :: (entries, string) -> entries
     setnew = do ->
-        doset = (model, entry) -> mixin model, {input:decorate entry}
+        doset = (model, entry) -> mixin model, {input:decorate(entry), beginEdit:false}
         converge nth(0), parse, pipe(doset, validate(isnotvalid))
 
     # the date may have been entered in a relative way 'yy' which must
@@ -79,7 +79,7 @@ module.exports = (persist, decorate) ->
     edit = do ->
         finder = pipe nth(1), eqentry, firstfn
         entriesof = pipe nth(0), get('entries')
-        toinput  = (entry) -> {editId:entry?.entryId, input:entry}
+        toinput  = (entry) -> {editId:entry?.entryId, input:entry, beginEdit:true}
         getinput = converge finder, entriesof, pipe call, ifdef(fixorig), toinput
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
 
@@ -95,7 +95,9 @@ module.exports = (persist, decorate) ->
         evolve model, {entries:remove(idx)}
 
     # entries -> entries
-    unedit = evolve {editId:always(null), input:always(null), state:always(null)}
+    unedit = evolve {
+        editId:always(null), input:always(null), state:always(null), beginEdit:always(null)
+    }
 
     # :: entries -> entries
     save = do ->
@@ -126,4 +128,4 @@ module.exports = (persist, decorate) ->
         # load the start model
         load(start, stop)
 
-    {save, setnew, edit, load, month, delet, update, erase}
+    {save, setnew, edit, load, month, delet, update, erase, unedit}

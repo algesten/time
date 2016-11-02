@@ -1,7 +1,6 @@
 {connect} = require 'refnux'
 {div, span, input, table, tbody, form, button} = require('react-elem').DOM
 {stopped} = require '../util'
-row = require '../log/row'
 ismod = require '../../lib/ismod'
 later = require '../../lib/later'
 saveInput = require '../../actions/save-input'
@@ -18,8 +17,9 @@ module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
             placeholder:'t meeting with boss ttn1 3h', onKeyDown: (ev) ->
                 el = ev.target
                 # later, so we get the key just typed in el.value
-                later -> dispatch newInput(entries, el.value)
+                unless ev.keyCode == 13
+                    later -> dispatch newInput(entries, el.value)
             div class:'status', ->
-                if entries.state == 'valid'
+                if entries.state == 'valid' and not entries.editId?
                     span class:'icon icon-check', onClick: stopped (ev) -> dosave()
     , onSubmit: stopped (ev) -> dosave()

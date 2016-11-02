@@ -1,15 +1,20 @@
-{div, span, input} = require('react-elem').DOM
+{div, span, form, input} = require('react-elem').DOM
 {each, map, pipe, get, add, apply, iif, always, partial, I} = require 'fnuc'
-{connect} = require 'refnux'
+{stopped}  = require '../util'
+{connect}  = require 'refnux'
 moment     = require 'moment'
 groupby    = require '../../lib/groupby'
 datediff   = require '../../lib/datediff'
 timeamount = require '../../lib/timeamount'
+beginEdit  = require '../../actions/begin-edit'
+later      = require '../../lib/later'
+newInput   = require '../../actions/new-input'
+stopEdit   = require '../../actions/stop-edit'
+saveInput  = require '../../actions/save-input'
+deleteEntry = require '../../actions/delete-entry'
 
 grouped = groupby (entry) -> moment(entry.date).format()
 sumof = pipe map(get('time')), apply(add(0))
-
-row = require './row'
 
 # we want iif(I, _, always('-'))
 ifdef = partial iif(always(' ')), I
@@ -19,19 +24,21 @@ ifstr  = ifdef I
 iftime = ifdef timeamount
 
 module.exports = connect (state, dispatch) -> div key:'list', class:'list', ->
+    {entries} = state
 
     div key:'input-result', class:'input-result', ->
-        input = state.entries?.input
-        row {
-            date: ifdate(input?.date)
-            title: ''
-            projectTitle: ifstr(input?._project?.title)
-            projectId: ifstr(input?.projectId)
-            time: iftime(input?.time)
-        }
+        # only show result from the input field, not edits
+        result = entries?.input unless entries?.editId?
+        div key:'input-result-entryrow', class:"entryrow", ->
+            div key:"input-result-1st", ->
+                span class:'date', ifdate(result?.date)
+                span class:'title', ''
+            div ifstr(result?._project?.title)
+            div ifstr(result?.projectId)
+            div iftime(result?.time)
 
-    entries = state.entries?.entries ? []
-    gs = grouped entries
+    entrylist = entries?.entries ? []
+    gs = grouped entrylist
     projectlookup = require('../../lib/projectlookup') state.projects
     div key:'rows', class:'rows', -> each gs, (g) ->
         div class:'daterow', -> div ->
@@ -39,33 +46,40 @@ module.exports = connect (state, dispatch) -> div key:'list', class:'list', ->
             span class:'time sum', timeamount sumof g
         each g, (e) ->
             regproj = projectlookup e.projectId
-            row {
-                title:e.title
-                projectTitle:regproj?.title ? ''
-                projectId:e.projectId
-                time: timeamount e.time
-                key: e.entryId
-            }
-        # div class:'date', datediff(g[0].date)
-        # div class:'totaltime', timeamount sumof g
-        # ol -> each g, (e) ->
-        #     if entries.editId == e.entryId
-        #         li ->
-        #             div class:'controls-inline', ->
-        #                 # editing entry
-        #                 div class:'delete icon-cancel', onclick: (ev) ->
-        #                     if confirm "Really delete entry?"
-        #                         action 'delete entry', entries, e
-        #                 div class:'interpret', -> interpret.fn(true, entries)
-        #                 div class:'input',     -> edit(entries)
-        #             , onclick: stop (ev) -> false # no clickyclick
-        #     else
-        #         li class:'entry', ->
-        #             div class:'title',      e.title
-        #             regproj = projectlookup e.projectId
-        #             if regproj
-        #                 div class:'project-title', regproj.title
-        #             div class:'project-id', e.projectId
-        #             div class:'time',       timeamount e.time
-        #         , onclick: stop (ev) ->
-        #             action 'edit entry', entries, e.entryId
+            isedit = e.entryId == entries.editId
+            clz = if isedit then 'editing' else ''
+            key = e.entryId
+            div key:key, class:"entryrow #{clz}", ->
+                div key:"#{key}-1st", ->
+                    if isedit
+                        diddelete = false
+                        form ->
+                            span class:'icon icon-cancel', onClick: (ev) ->
+                                diddelete = true
+                                dispatch deleteEntry(entries, e)
+                            orig = entries.input?.orig
+                            input type:'text', key:"#{key}-1st-input", defaultValue:orig
+                            , onBlur: (ev) ->
+                                # the time between blur and the click event for
+                                # icon-cancel is ridiculously long. 50 is not enough,
+                                # 100 maybe. and if we let the blur happen with
+                                # a redraw, the click event never occurs. we can't win...
+                                setTimeout ->
+                                    dispatch stopEdit(entries) unless diddelete
+                                , 150
+                            , onKeyDown: (ev) ->
+                                el = ev.target
+                                # later, so we get the key just typed in el.value
+                                unless ev.keyCode == 13
+                                    later -> dispatch newInput(entries, el.value)
+                            if entries.beginEdit
+                                # once drawn, put cursor there
+                                later -> document.querySelector('.entryrow input')?.focus()
+                        , onSubmit: stopped (ev) ->
+                            dispatch saveInput(entries)
+                    else
+                        span class:'title', e.title
+                div regproj?.title ? ''
+                div e.projectId
+                div timeamount e.time
+            , onClick: stopped (ev) -> dispatch beginEdit(entries, e.entryId)

@@ -2,6 +2,9 @@
 
 .entryrow
   display table-row
+  cursor pointer
+  &.editing
+    cursor normal
   div
     display table-cell
     font-size 0.8em
@@ -11,9 +14,16 @@
   div:nth-child(1)
     padding-left 1rem
     color $white
+    position relative
     .date
       margin-right 0.5rem
     min-width 12rem
+    input
+      width 100%
+      line-height 1.4rem
+      font-size 1em
+      background darken($cyan, 80%)
+      color $cyan
   div:nth-child(2)
     width 5rem
     white-space nowrap
@@ -25,3 +35,9 @@
     padding-right 1rem
     width 3rem
     white-space nowrap
+  .icon-cancel
+    position absolute
+    top 0
+    left -0.5em
+    color $red
+    cursor pointer
