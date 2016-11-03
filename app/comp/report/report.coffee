@@ -27,25 +27,3 @@ module.exports = connect (state, dispatch) -> div key:'report', class:'report', 
                     div class:'id', proj.projectId
                     div class:'title', projectlookup(proj.projectId)?.title ? ''
                     div class:'time ptime', timeamount proj.seconds
-
-    #         ol -> each clientfilter(client.clientId)(month.projects), (proj) -> li ->
-    #             regproj = projectlookup proj.projectId
-    #             div class:'proj', ->
-    #                 span class:'id', proj.projectId
-    #                 pass ' '
-    #                 span class:'title', regproj?.title ? ''
-    #             div class:'time ptime', timeamount proj.seconds
-    #     ol -> each month.perweek, (week) ->  li ->
-    #         div class:'week', ->
-    #             ws = moment(week.date).format('DD')
-    #             we = moment(week.date).add(6, 'days').format('DD')
-    #             wk = moment(week.date).format('ww')
-    #             "#{ws}–#{we} (#{wk})"
-    #         div class:'time wtime', timeamount week.seconds
-    #         ol -> each week.projects, (proj) -> li ->
-    #             regproj = projectlookup proj.projectId
-    #             div class:'proj', ->
-    #                 span class:'id', proj.projectId
-    #                 pass ' '
-    #                 span class:'title', regproj?.title ? ''
-    #             div class:'time ptime', timeamount proj.seconds
