@@ -12,3 +12,4 @@ module.exports =
     entries:  {}      # input and entry list. see lib/entries
     clients:  {}      # client list. see lib/clients
     projects: {}      # project list. see lib/projects
+    report:   {}      # the latest report. see lib/reports

@@ -36,4 +36,4 @@ module.exports = parsedate = (s) ->
     m       = if sdate then moment(sdate, l.formats) else moment()
     date    = asutc new Date m.format 'YYYY-MM-DD'
     rel     = torel(l.offsets) srel
-    moment(date).add(rel, 'days').toDate()
+    moment(date).add(rel, 'days').utcOffset(0).toDate()

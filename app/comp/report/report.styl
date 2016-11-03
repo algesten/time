@@ -1,0 +1,31 @@
+@import '../defs'
+
+.report
+  display table
+  font-size 0.8rem
+  .rows
+    display table-row-group
+    > div
+      display table-row
+      &.daterow
+        > div
+          padding-top 2rem
+          border-bottom 1px solid darken($orange, 60%)
+          padding-bottom 0.4rem
+        font-size 0.9rem
+      &.clientrow
+        > div
+          padding-top 0.4rem
+      > div
+        display table-cell
+        padding 0.2rem 0
+      div:nth-child(1)
+        width 4rem
+      div:nth-child(2)
+        color $cyan
+        font-size 0.7rem
+        width 14rem
+      div:nth-child(3)
+        color $cyan
+        width 4rem
+        text-align right

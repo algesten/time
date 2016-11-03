@@ -1,6 +1,6 @@
 {tap, pipe, get, apply, converge, I, call, mixin, reverse, map} = require 'fnuc'
-
 {today, toiso} = require './datefun'
+moment = require 'moment'
 
 module.exports = (persist) ->
 
@@ -17,8 +17,8 @@ module.exports = (persist) ->
     # :: -> report
     init = -> run
         fromto: [
-            toiso moment(today()).subtract(1, 'year').toDate()
-            toiso moment(today()).add(1, 'year').toDate()
+            toiso moment(today()).utcOffset(0).subtract(1, 'year').toDate()
+            toiso moment(today()).utcOffset(0).add(1, 'year').toDate()
         ],
         permonth: null
 

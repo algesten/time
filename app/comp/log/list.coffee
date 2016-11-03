@@ -13,7 +13,7 @@ stopEdit   = require '../../actions/stop-edit'
 saveInput  = require '../../actions/save-input'
 deleteEntry = require '../../actions/delete-entry'
 
-grouped = groupby (entry) -> moment(entry.date).format()
+grouped = groupby (entry) -> moment(entry.date).utcOffset(0).format()
 sumof = pipe map(get('time')), apply(add(0))
 
 # we want iif(I, _, always('-'))

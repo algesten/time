@@ -2,17 +2,18 @@
 
 {client, index} = require './elasticclient'
 
-run = (body) -> client.search {index, 'entry', body}
+run = (body) -> client.search {index, type:'entry', body}
 
 module.exports = (user) ->
 
     limit = (from, to) ->
-        query:filtered:
-            query:match_all:{}
-            filter:bool:must:[
-                {term:userId:user.id}
-                {range:date:{gte:from,lt:to}}
-            ]
+        query:match_all:{}
+        # query:filtered:
+        #     query:match_all:{}
+        #     filter:bool:must:[
+        #         {term:userId:user.id}
+        #         {range:date:{gte:from,lt:to}}
+        #     ]
 
     aggs = aggs:
         permonth:

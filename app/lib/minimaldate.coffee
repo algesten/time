@@ -3,7 +3,7 @@ moment = require 'moment'
 
 {today} = require './datefun'
 
-mtoday = -> moment(today())
+mtoday = -> moment(today()).utcOffset(0)
 
 notsame = (f) -> (tim) -> mtoday().format(f) != tim.format(f)
 diff    = (t) -> (tim) -> mtoday().diff(tim, t)
