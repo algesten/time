@@ -63,6 +63,7 @@ describe 'entries', ->
             eql model2,
                 editId: null
                 entries: []
+                beginEdit: false
                 input:
                     clientId: 'TTN'
                     date: new Date('2015-10-11Z').toISOString()
@@ -81,6 +82,7 @@ describe 'entries', ->
             eql model2,
                 editId: null
                 entries: []
+                beginEdit: false
                 input:
                     clientId: undefined
                     date: new Date('2015-10-11Z').toISOString()
@@ -99,11 +101,13 @@ describe 'entries', ->
         it 'sets a valid input/editId', ->
             model2 = m.edit withentry, 'ent1'
             eql model2.editId, 'ent1'
+            eql model2.beginEdit, true
             eql model2.input.entryId, 'ent1'
 
         it 'doesnt set an invalid input/editId', ->
             model2 = m.edit withentry, 'entx'
             eql model2.editId, undefined
+            eql model2.beginEdit, false
             eql model2.input, null
 
     describe 'save', ->

@@ -79,7 +79,7 @@ module.exports = (persist, decorate) ->
     edit = do ->
         finder = pipe nth(1), eqentry, firstfn
         entriesof = pipe nth(0), get('entries')
-        toinput  = (entry) -> {editId:entry?.entryId, input:entry, beginEdit:true}
+        toinput  = (entry) -> {editId:entry?.entryId, input:entry, beginEdit:!!entry?.entryId}
         getinput = converge finder, entriesof, pipe call, ifdef(fixorig), toinput
         converge I, getinput, pipe mixin, iif get('input'), tostate('valid'), tostate('')
 
