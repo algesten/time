@@ -67,7 +67,7 @@ module.exports = (persist, decorate) ->
     # :: entry -> entry
     fixorig = do ->
         parseorig = (entry) -> parse {}, entry?.orig
-        gettime   = (d) -> moment(d).valueOf()
+        gettime   = (d) -> moment(d).utcOffset(0).valueOf()
         samedate  = pipe unapply(I), map(pipe get('date'), gettime), apply(eq)
         dofix    = (entry) ->
             fixed = minimaldate moment(asutc new Date entry.date)
@@ -122,7 +122,7 @@ module.exports = (persist, decorate) ->
     month = ->
 
         # default time period to load into UI
-        start = asutc moment().subtract(1, 'month').toDate()
+        start = asutc moment().utcOffset(0).subtract(1, 'month').toDate()
         stop  = null
 
         # load the start model
