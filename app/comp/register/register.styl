@@ -1,0 +1,27 @@
+@import '../defs'
+
+.register
+  display table
+  font-size 0.85rem
+  > div
+    display table-row
+    &.clientrow
+      color $green
+      font-weight 400
+      > div
+          padding-top 2rem
+          border-bottom 1px solid darken($orange, 60%)
+          padding-bottom 0.4rem
+      > div:nth-child(2)
+        color: $pink
+    &.projectrow
+      color $white
+      > div:nth-child(2)
+        color $cyan
+    > div
+      display table-cell
+      padding 0.2rem 0
+      &:nth-child(1)
+        width 5rem
+  .clientrow + .projectrow > div
+    padding-top 0.4rem

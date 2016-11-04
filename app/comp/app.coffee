@@ -29,3 +29,5 @@ module.exports = connect (state, dispatch) -> div key:'container', class:'contai
     else if view == 'register'
 
         require('./nav/nav')()
+        require('./register/reginput')()
+        require('./register/register')()

@@ -5,7 +5,6 @@ ismod = require '../../lib/ismod'
 later = require '../../lib/later'
 saveInput = require '../../actions/save-input'
 newInput = require '../../actions/new-input'
-{stopped} = require '../util'
 
 module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
     {entries} = state
@@ -23,5 +22,6 @@ module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
                 if entries.state == 'valid' and not entries.editId?
                     span class:'icon icon-check', onClick: stopped (ev) -> dosave()
     , onSubmit: stopped (ev) ->
-        document.querySelector('#inputform input').value = ''
-        dosave()
+        if entries.state == 'valid' and not entries.editId?
+            document.querySelector('#inputform input').value = ''
+            dosave()
