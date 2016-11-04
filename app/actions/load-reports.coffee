@@ -2,13 +2,13 @@
 flashinfo = require '../lib/flashinfo'
 later = require '../lib/later'
 
-module.exports = (refresh) -> (state, dispatch) ->
+module.exports = (state, dispatch) ->
     {fn, report} = state
 
     handle = pipe ((report) -> dispatch -> {report}), -> flashinfo(dispatch, 'Report loaded')
 
     todo = if report.fromto
-        if refresh then pipe(fn.reports.refresh, handle) else I
+        pipe fn.reports.refresh, handle
     else
         pipe fn.reports.init, handle
 

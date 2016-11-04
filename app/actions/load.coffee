@@ -7,8 +7,11 @@ module.exports = (state, dispatch) ->
     loadentries  = pipe fn.entries.month, (entries)  -> dispatch -> {entries}
     loadclients  = pipe fn.clients.init,  (clients)  -> dispatch -> {clients}
     loadprojects = pipe fn.projects.init, (projects) -> dispatch -> {projects}
-    loadstuff = converge loadentries, loadclients, loadprojects, -> flashinfo dispatch, 'Started'
+    loadstuff = converge loadentries, loadclients, loadprojects
 
-    loadstuff()
+    todo = pipe loadstuff
+    , (-> flashinfo dispatch, 'Started')
+
+    todo()
 
     {info:"Loading…", running:true}

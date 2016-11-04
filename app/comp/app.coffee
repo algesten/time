@@ -1,6 +1,5 @@
 {connect} = require 'refnux'
 {div, a, span, i} = require('react-elem').DOM
-loadReports = require '../actions/load-reports'
 later = require '../lib/later'
 
 module.exports = connect (state, dispatch) -> div key:'container', class:'container', ->
@@ -26,7 +25,6 @@ module.exports = connect (state, dispatch) -> div key:'container', class:'contai
 
         require('./nav/nav')()
         require('./report/report')()
-        later -> dispatch loadReports(false)
 
     else if view == 'register'
 

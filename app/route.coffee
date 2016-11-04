@@ -1,5 +1,7 @@
 {route, path, navigate} = require 'broute'
 
+loadReports = require './actions/load-reports'
+
 module.exports = (dispatch, views) ->
 
     # reverse sort to get href '/' last
@@ -10,5 +12,8 @@ module.exports = (dispatch, views) ->
         sorted.forEach (v) ->
             return if did
             path v.href, -> did = true; dispatch -> {view:v.id}
+
+        path '/report', ->
+            dispatch loadReports
 
     navigate()

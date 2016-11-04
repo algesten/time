@@ -8,7 +8,8 @@ wrap            = require 'react-elem'
 store = window.store = createStore require('model')
 
 # kick it off by initializing the routing
-require('./route') store.dispatch, store.state.views
+initRoute = ->
+    require('./route') store.dispatch, store.state.views
 
 # start socket io.
 emit = require('./io') store.dispatch
@@ -30,6 +31,8 @@ do ->
     # put in model for use in actions
     store.dispatch -> fn:{clients, projects, entries, reports}
 
+    # and init the route after, since this use stuff in the model
+    initRoute()
 
 socket.on 'startup', (user) ->
     unless user?.id?
