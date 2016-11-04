@@ -8,7 +8,7 @@ module.exports = entry:properties:
         type:  'date'
     title:
         type:  'text'
-        fielddata: true
+        fields:keyword:type:'keyword'
     time:
         type:  'long'
     clientId:
