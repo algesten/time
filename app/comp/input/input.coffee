@@ -9,6 +9,7 @@ newInput = require '../../actions/new-input'
 module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
     {entries} = state
     dosave = -> if entries.state == 'valid'
+        document.querySelector('#inputform input').value = ''
         dispatch saveInput(entries)
     form id:'inputform', key:'inputform', ->
         div key:'input-main', class:'main', ->
@@ -21,7 +22,4 @@ module.exports = connect (state, dispatch) -> div key:'input', class:'input', ->
             div class:'status', ->
                 if entries.state == 'valid' and not entries.editId?
                     span class:'icon icon-check', onClick: stopped (ev) -> dosave()
-    , onSubmit: stopped (ev) ->
-        if entries.state == 'valid' and not entries.editId?
-            document.querySelector('#inputform input').value = ''
-            dosave()
+    , onSubmit: stopped (ev) -> dosave()
