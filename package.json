@@ -13,7 +13,9 @@
     "start": "coffee index.coffee",
     "test": "mocha",
     "dev": "DEV=1 brunch watch --server",
-    "authdev": ". env.sh && brunch watch --server"
+    "authdev": ". env.sh && brunch watch --server",
+    "docker-build": "docker build -t whales/time . && docker tag whales/time 604265647657.dkr.ecr.us-east-1.amazonaws.com/whales/time",
+    "docker-push": "docker push 604265647657.dkr.ecr.us-east-1.amazonaws.com/whales/time"
   },
   "dependencies": {
     "body-parser": "^1.14.1",
