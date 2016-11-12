@@ -5,9 +5,9 @@ module.exports =
     running: false  # whether info has a spinning icon
     view: 'log'     # view to view 'login', 'log', 'report', 'register'
     views: [
-        {id:'log',      icon:'clock',       href:'/'}
-        {id:'report',   icon:'paper-plane', href:'/report'}
-        {id:'register', icon:'vcard',       href:'/register'}
+        {id:'log',      icon:'clock',       href:'/',         sort:1}
+        {id:'report',   icon:'paper-plane', href:'/report',   sort:2}
+        {id:'register', icon:'vcard',       href:'/register', sort:3}
     ]
     entries:  {}      # input and entry list. see lib/entries
     clients:  {}      # client list. see lib/clients
