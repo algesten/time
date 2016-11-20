@@ -5,8 +5,7 @@ later = require '../../lib/later'
 
 module.exports = (params) ->
     {title, projectTitle, projectId, time, date,
-     key, onClick, orig, beginEdit, dispatch} = params
-    console.log beginEdit
+    key, onClick, orig, beginEdit, dispatch} = params
     div key:key, class:"entryrow #{clz}", ->
         div key:"#{key}-1st", ->
             if isedit
